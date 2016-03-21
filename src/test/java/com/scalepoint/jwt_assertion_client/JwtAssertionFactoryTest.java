@@ -28,47 +28,47 @@ public class JwtAssertionFactoryTest {
     }
 
     @Test
-    public void shouldBeJwt() {
+    public void testIsJwt() {
         Assert.assertEquals(token.getHeader().getType(), "JWT");
     }
 
     @Test
-    public void shouldUseRS256() {
+    public void testUsesRS256() {
         Assert.assertEquals(token.getHeader().getAlgorithm(), "RS256");
     }
 
     @Test
-    public void shouldContainX5t() {
+    public void testContainsX5t() {
         Assert.assertEquals(token.getHeader().get("x5t"), thumbprint);
     }
 
     @Test
-    public void shouldContainValidIssuer() {
+    public void testContainsValidIssuer() {
         Assert.assertEquals(token.getBody().getIssuer(), CLIENT_ID);
     }
 
     @Test
-    public void shouldContainValidSubject() {
+    public void testContainsValidSubject() {
         Assert.assertEquals(token.getBody().getSubject(), CLIENT_ID);
     }
 
     @Test
-    public void shouldContainValidAudience() {
+    public void testContainsValidAudience() {
         Assert.assertEquals(token.getBody().getAudience(), TOKEN_ENDPOINT_URI);
     }
 
     @Test
-    public void shouldContainJwtId() {
+    public void testContainsJwtId() {
         Assert.assertNotNull(token.getBody().getId());
     }
 
     @Test
-    public void shouldContainExpiration() {
+    public void testContainsExpiration() {
         Assert.assertNotNull(token.getBody().getExpiration());
     }
 
     @Test
-    public void shouldContainIssuedAt() {
+    public void testContainsIssuedAt() {
         Assert.assertNotNull(token.getBody().getIssuedAt());
     }
 }
