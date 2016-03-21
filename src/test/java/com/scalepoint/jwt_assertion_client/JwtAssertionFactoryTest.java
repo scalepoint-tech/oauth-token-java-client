@@ -1,13 +1,16 @@
 package com.scalepoint.jwt_assertion_client;
 
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwts;
 import org.testng.Assert;
-import org.testng.annotations.BeforeTest;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 /**
  * Validate that assertion token is generated according to the specification
  */
+@SuppressWarnings("unused")
 public class JwtAssertionFactoryTest {
 
     private final static String TOKEN_ENDPOINT_URI = "https://foobar";
@@ -15,7 +18,7 @@ public class JwtAssertionFactoryTest {
     private Jws<Claims> token;
     private String thumbprint;
 
-    @BeforeTest
+    @BeforeClass
     public void init() {
         RSACertificateWithPrivateKey keyPair = TestCertificateHelper.load();
         thumbprint = CertificateUtil.getThumbprint(keyPair.getCertificate());

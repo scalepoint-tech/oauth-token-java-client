@@ -26,6 +26,7 @@ public class JwtAssertionTokenClient implements TokenClient {
      * @param clientId OAuth2 "client_id"
      * @param keyPair Certificate and private key. Certificate must be signed with SHA256. RSA keys must be 2048 bits long. Certificate must be associated with the client_id on the server.
      */
+    @SuppressWarnings({"SameParameterValue", "unused"})
     public JwtAssertionTokenClient(String tokenEndpointUri, String clientId, RSACertificateWithPrivateKey keyPair) {
         this(tokenEndpointUri, clientId, keyPair, LazyCacheHolder.CACHE);
     }
@@ -37,6 +38,7 @@ public class JwtAssertionTokenClient implements TokenClient {
      * @param keyPair Certificate and private key. Certificate must be signed with SHA256. RSA keys must be 2048 bits long. Certificate must be associated with the client_id on the server.
      * @param cache Token cache
      */
+    @SuppressWarnings({"WeakerAccess", "SameParameterValue", "unused"})
     public JwtAssertionTokenClient(String tokenEndpointUri, String clientId, RSACertificateWithPrivateKey keyPair, TokenCache cache) {
         this.internalTokenClient = new InternalJwtAssertionTokenClient(tokenEndpointUri, clientId, keyPair);
         this.partialCacheKey = StringUtils.join(tokenEndpointUri, clientId, CertificateUtil.getThumbprint(keyPair.getCertificate()), "|");
@@ -47,7 +49,7 @@ public class JwtAssertionTokenClient implements TokenClient {
      * Retrieve access token for the configured "client_id" and specified scopes. Request to the server is only performed if matching valid token is not in the cache
      * @param scopes One or more OAuth2 scopes to request
      * @return Access token
-     * @throws IOException
+     * @throws IOException Exception during token endpoint communication
      */
     @Override
     public String getToken(final String... scopes) throws IOException {

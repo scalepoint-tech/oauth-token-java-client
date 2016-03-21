@@ -17,6 +17,7 @@ public class InMemoryTokenCache implements TokenCache {
     /**
      * Create new in-memory cache instance
      */
+    @SuppressWarnings("WeakerAccess")
     public InMemoryTokenCache() {
         this.cacheMap = ExpiringMap.builder()
                 .variableExpiration()
@@ -27,7 +28,7 @@ public class InMemoryTokenCache implements TokenCache {
      * @param cacheKey         Cache key
      * @param underlyingSource Underlying token source to invoke on cache miss
      * @return Token from either cache or underlying source
-     * @throws IOException
+     * @throws IOException Exception from underlying source
      */
     @Override
     public String get(String cacheKey, TokenSource underlyingSource) throws IOException {

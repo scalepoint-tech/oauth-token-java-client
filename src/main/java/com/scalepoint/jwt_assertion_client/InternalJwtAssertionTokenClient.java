@@ -20,7 +20,7 @@ class InternalJwtAssertionTokenClient {
     private final String clientId;
     private final JwtAssertionFactory assertionFactory;
 
-    public InternalJwtAssertionTokenClient(String tokenEndpointUri, String clientId, RSACertificateWithPrivateKey keyPair) {
+    InternalJwtAssertionTokenClient(String tokenEndpointUri, String clientId, RSACertificateWithPrivateKey keyPair) {
         this.tokenEndpointUri = tokenEndpointUri;
         this.clientId = clientId;
         this.assertionFactory = new JwtAssertionFactory(tokenEndpointUri, clientId, keyPair);

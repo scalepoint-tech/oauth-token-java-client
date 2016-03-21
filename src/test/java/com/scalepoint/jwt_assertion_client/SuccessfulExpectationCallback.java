@@ -5,6 +5,7 @@ import org.mockserver.model.Header;
 import org.mockserver.model.HttpRequest;
 import org.mockserver.model.HttpResponse;
 
+@SuppressWarnings("WeakerAccess")
 public class SuccessfulExpectationCallback implements ExpectationCallback {
     @Override
     public HttpResponse handle(HttpRequest httpRequest) {

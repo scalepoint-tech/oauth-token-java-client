@@ -12,6 +12,7 @@ import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class ValidRequestExpectationCallback implements ExpectationCallback {
     @Override
     public HttpResponse handle(HttpRequest httpRequest) {

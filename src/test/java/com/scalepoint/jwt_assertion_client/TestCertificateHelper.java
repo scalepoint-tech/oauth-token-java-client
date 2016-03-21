@@ -11,7 +11,7 @@ import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPrivateKey;
 import java.util.Properties;
 
-public class TestCertificateHelper {
+class TestCertificateHelper {
 
     public static RSACertificateWithPrivateKey load()
     {

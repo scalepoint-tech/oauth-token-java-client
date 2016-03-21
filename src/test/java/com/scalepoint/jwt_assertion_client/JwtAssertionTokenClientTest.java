@@ -2,24 +2,24 @@ package com.scalepoint.jwt_assertion_client;
 
 import org.apache.http.client.HttpResponseException;
 import org.mockserver.integration.ClientAndServer;
-import org.mockserver.matchers.Times;
 import org.mockserver.model.HttpCallback;
 import org.mockserver.model.HttpRequest;
-import org.mockserver.model.ParameterBody;
 import org.mockserver.socket.PortFactory;
-import org.mockserver.verify.VerificationTimes;
 import org.testng.Assert;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
-import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 
 import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 
+@SuppressWarnings("unused")
 public class JwtAssertionTokenClientTest {
 
     private ClientAndServer mockServer;

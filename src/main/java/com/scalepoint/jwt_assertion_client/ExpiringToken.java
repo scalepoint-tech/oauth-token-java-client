@@ -12,7 +12,7 @@ public class ExpiringToken {
      * @param token Token
      * @param expiresInSeconds Expiration in seconds
      */
-    public ExpiringToken(String token, int expiresInSeconds) {
+    ExpiringToken(String token, int expiresInSeconds) {
         this.token = token;
         this.expiresInSeconds = expiresInSeconds;
     }
