@@ -2,6 +2,7 @@ package com.scalepoint.jwt_assertion_client;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -12,6 +13,7 @@ import org.apache.http.client.fluent.Request;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 
 class InternalJwtAssertionTokenClient {
     private final String tokenEndpointUri;
@@ -35,7 +37,8 @@ class InternalJwtAssertionTokenClient {
                                 .add("client_assertion_type", "urn:ietf:params:oauth:client-assertion-type:jwt-bearer")
                                 .add("client_assertion", assertionToken)
                                 .add("scope", StringUtils.join(scopes, " "))
-                                .build()
+                                .build(),
+                        Charset.forName(CharEncoding.UTF_8)
                 )
                 .socketTimeout(15 * 1000)
                 .connectTimeout(15 * 1000)
