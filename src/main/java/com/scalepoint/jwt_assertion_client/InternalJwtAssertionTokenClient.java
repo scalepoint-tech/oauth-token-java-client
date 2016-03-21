@@ -65,7 +65,12 @@ class InternalJwtAssertionTokenClient {
         JsonNode rootNode = mapper.readValue(tokenResponse, JsonNode.class);
 
         String accessToken = rootNode.get("access_token").asText();
-        int expiresInSeconds = rootNode.get("expires_in").asInt();
+
+        int expiresInSeconds = 0;
+        JsonNode expires_in = rootNode.get("expires_in");
+        if (expires_in != null) {
+            expiresInSeconds = expires_in.asInt();
+        }
 
         return new ExpiringToken(accessToken, expiresInSeconds);
     }
