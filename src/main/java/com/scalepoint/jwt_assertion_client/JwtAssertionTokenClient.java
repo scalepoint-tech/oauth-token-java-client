@@ -16,7 +16,7 @@ public class JwtAssertionTokenClient implements TokenClient {
         public static final TokenCache CACHE = new InMemoryTokenCache();
     }
 
-    private final PrivateKeyJwtTokenClient internalTokenClient;
+    private final InternalJwtAssertionTokenClient internalTokenClient;
     private final String partialCacheKey;
     private final TokenCache cache;
 
@@ -38,7 +38,7 @@ public class JwtAssertionTokenClient implements TokenClient {
      * @param cache Token cache
      */
     public JwtAssertionTokenClient(String tokenEndpointUri, String clientId, RSACertificateWithPrivateKey keyPair, TokenCache cache) {
-        this.internalTokenClient = new PrivateKeyJwtTokenClient(tokenEndpointUri, clientId, keyPair);
+        this.internalTokenClient = new InternalJwtAssertionTokenClient(tokenEndpointUri, clientId, keyPair);
         this.partialCacheKey = StringUtils.join(tokenEndpointUri, clientId, CertificateUtil.getThumbprint(keyPair.getCertificate()), "|");
         this.cache = cache;
     }
