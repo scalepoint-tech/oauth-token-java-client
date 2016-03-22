@@ -32,7 +32,8 @@ public class ValidRequestExpectationCallback implements ExpectationCallback {
 
         if (!params.get("grant_type").equals("client_credentials")) return false;
         if (!params.get("client_id").equals("clientid")) return false;
-        if (!params.get("client_assertion_type").equals("urn:ietf:params:oauth:client-assertion-type:jwt-bearer")) return false;
+        if (!params.get("client_assertion_type").equals("urn:ietf:params:oauth:client-assertion-type:jwt-bearer"))
+            return false;
         if (!params.get("scope").equals("scope1 scope2")) return false;
 
         RSACertificateWithPrivateKey keyPair = TestCertificateHelper.load();

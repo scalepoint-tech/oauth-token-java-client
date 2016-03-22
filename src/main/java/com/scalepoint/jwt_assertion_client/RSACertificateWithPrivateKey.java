@@ -12,7 +12,8 @@ public class RSACertificateWithPrivateKey {
 
     /**
      * Create new container for private key and certificate
-     * @param privateKey Private key
+     *
+     * @param privateKey  Private key
      * @param certificate X509 certificate
      */
     public RSACertificateWithPrivateKey(RSAPrivateKey privateKey, X509Certificate certificate) {

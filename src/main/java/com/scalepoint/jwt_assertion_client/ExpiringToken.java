@@ -9,7 +9,8 @@ public class ExpiringToken {
 
     /**
      * Create new container
-     * @param token Token
+     *
+     * @param token            Token
      * @param expiresInSeconds Expiration in seconds
      */
     ExpiringToken(String token, int expiresInSeconds) {

@@ -28,14 +28,14 @@ public class JwtAssertionTokenClientTest {
     @BeforeClass
     public void disableCertificateValidation() throws NoSuchAlgorithmException, KeyManagementException {
         SSLContext sc = SSLContext.getInstance("TLS");
-        sc.init(null, new TrustManager[] { new TrustAllX509TrustManager() }, new java.security.SecureRandom());
+        sc.init(null, new TrustManager[]{new TrustAllX509TrustManager()}, new java.security.SecureRandom());
         SSLContext.setDefault(sc);
     }
 
     @BeforeClass
     public void start() {
         int port = PortFactory.findFreePort();
-        tokenEndpointUri = "https://localhost:"+port+"/oauth2/token";
+        tokenEndpointUri = "https://localhost:" + port + "/oauth2/token";
         mockServer = ClientAndServer.startClientAndServer(port);
     }
 
@@ -59,7 +59,7 @@ public class JwtAssertionTokenClientTest {
                         .withPath("/oauth2/token"),
                 exactly(1)
         )
-        .callback(HttpCallback.callback().withCallbackClass(SuccessfulExpectationCallback.class.getName()));
+                .callback(HttpCallback.callback().withCallbackClass(SuccessfulExpectationCallback.class.getName()));
 
         TokenClient tokenClient = new JwtAssertionTokenClient(tokenEndpointUri, "clientid", TestCertificateHelper.load());
         tokenClient.getToken("success");

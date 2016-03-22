@@ -42,6 +42,6 @@ class CertificateUtil {
                                 .multiply(privateKey.getPrivateExponent())
                                 .subtract(BigInteger.ONE),
                         rsaPublicKey.getModulus())
-                .equals( BigInteger.ONE );
+                .equals(BigInteger.ONE);
     }
 }

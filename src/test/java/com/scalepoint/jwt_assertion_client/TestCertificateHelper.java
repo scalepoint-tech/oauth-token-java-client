@@ -13,8 +13,7 @@ import java.util.Properties;
 
 class TestCertificateHelper {
 
-    public static RSACertificateWithPrivateKey load()
-    {
+    public static RSACertificateWithPrivateKey load() {
         try {
             Properties config = new Properties();
             config.load(new FileInputStream("config.properties"));
