@@ -16,7 +16,7 @@ Install with Maven:
 <dependency>
     <groupId>com.scalepoint</groupId>
     <artifactId>oauth-jwt-assertion-client</artifactId>
-    <version>0.1.0</version>
+    <version>1.0</version>
 </dependency>
 ```
 
