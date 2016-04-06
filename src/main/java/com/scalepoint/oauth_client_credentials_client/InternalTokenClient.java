@@ -10,15 +10,13 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.List;
 
-abstract class InternalTokenClient {
+class InternalTokenClient {
 
     private final String tokenEndpointUri;
 
-    InternalTokenClient(String tokenEndpointUri) {
+    public InternalTokenClient(String tokenEndpointUri) {
         this.tokenEndpointUri = tokenEndpointUri;
     }
-
-    abstract public ExpiringToken getToken(String... scopes) throws IOException;
 
     ExpiringToken getToken(List<NameValuePair> params) throws IOException {
         final String tokenResponse = Request.Post(tokenEndpointUri)

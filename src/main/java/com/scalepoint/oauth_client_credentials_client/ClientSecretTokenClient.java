@@ -2,8 +2,11 @@ package com.scalepoint.oauth_client_credentials_client;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.fluent.Form;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * OAuth2 Token endpoint client with client_credentials flow support using "client_secret" client authentication scheme.
@@ -16,7 +19,9 @@ public class ClientSecretTokenClient implements TokenClient {
         public static final TokenCache CACHE = new InMemoryTokenCache();
     }
 
-    private final InternalClientSecretTokenClient internalTokenClient;
+    private final InternalTokenClient internalTokenClient;
+    private final String clientId;
+    private final String clientSecret;
     private final String partialCacheKey;
     private final TokenCache cache;
 
@@ -42,7 +47,9 @@ public class ClientSecretTokenClient implements TokenClient {
      */
     @SuppressWarnings({"WeakerAccess", "SameParameterValue", "unused"})
     public ClientSecretTokenClient(String tokenEndpointUri, String clientId, String clientSecret, TokenCache cache) {
-        this.internalTokenClient = new InternalClientSecretTokenClient(tokenEndpointUri, clientId, clientSecret);
+        this.internalTokenClient = new InternalTokenClient(tokenEndpointUri);
+        this.clientId = clientId;
+        this.clientSecret = clientSecret;
         this.partialCacheKey = StringUtils.join(tokenEndpointUri, clientId, DigestUtils.sha1(clientSecret), "|");
         this.cache = cache;
     }
@@ -64,7 +71,13 @@ public class ClientSecretTokenClient implements TokenClient {
         return cache.get(cacheKey, new TokenSource() {
             @Override
             public ExpiringToken get() throws IOException {
-                return internalTokenClient.getToken(scopes);
+                final List<NameValuePair> params = Form.form()
+                        .add("grant_type", "client_credentials")
+                        .add("client_id", clientId)
+                        .add("client_secret", clientSecret)
+                        .add("scope", scopeString)
+                        .build();
+                return internalTokenClient.getToken(params);
             }
         });
     }

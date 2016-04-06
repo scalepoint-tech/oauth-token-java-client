@@ -1,8 +1,11 @@
 package com.scalepoint.oauth_client_credentials_client;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.fluent.Form;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * OAuth2 Token endpoint client with client_credentials flow support using "private_key_jwt" client authentication scheme.
@@ -17,7 +20,9 @@ public class JwtAssertionTokenClient implements TokenClient {
         public static final TokenCache CACHE = new InMemoryTokenCache();
     }
 
-    private final InternalJwtAssertionTokenClient internalTokenClient;
+    private final JwtAssertionFactory assertionFactory;
+    private final InternalTokenClient internalTokenClient;
+    private final String clientId;
     private final String partialCacheKey;
     private final TokenCache cache;
 
@@ -43,7 +48,9 @@ public class JwtAssertionTokenClient implements TokenClient {
      */
     @SuppressWarnings({"WeakerAccess", "SameParameterValue", "unused"})
     public JwtAssertionTokenClient(String tokenEndpointUri, String clientId, RSACertificateWithPrivateKey keyPair, TokenCache cache) {
-        this.internalTokenClient = new InternalJwtAssertionTokenClient(tokenEndpointUri, clientId, keyPair);
+        this.assertionFactory = new JwtAssertionFactory(tokenEndpointUri, clientId, keyPair);
+        this.internalTokenClient = new InternalTokenClient(tokenEndpointUri);
+        this.clientId = clientId;
         this.partialCacheKey = StringUtils.join(tokenEndpointUri, clientId, CertificateUtil.getThumbprint(keyPair.getCertificate()), "|");
         this.cache = cache;
     }
@@ -65,7 +72,16 @@ public class JwtAssertionTokenClient implements TokenClient {
         return cache.get(cacheKey, new TokenSource() {
             @Override
             public ExpiringToken get() throws IOException {
-                return internalTokenClient.getToken(scopes);
+                String assertionToken = assertionFactory.CreateAssertionToken();
+
+                final List<NameValuePair> params = Form.form()
+                        .add("grant_type", "client_credentials")
+                        .add("client_id", clientId)
+                        .add("client_assertion_type", "urn:ietf:params:oauth:client-assertion-type:jwt-bearer")
+                        .add("client_assertion", assertionToken)
+                        .add("scope", StringUtils.join(scopes, " "))
+                        .build();
+                return internalTokenClient.getToken(params);
             }
         });
     }
