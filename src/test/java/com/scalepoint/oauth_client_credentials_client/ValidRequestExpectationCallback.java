@@ -1,4 +1,4 @@
-package com.scalepoint.jwt_assertion_client;
+package com.scalepoint.oauth_client_credentials_client;
 
 import io.jsonwebtoken.Jwts;
 import org.apache.commons.lang3.CharEncoding;
@@ -32,12 +32,17 @@ public class ValidRequestExpectationCallback implements ExpectationCallback {
 
         if (!params.get("grant_type").equals("client_credentials")) return false;
         if (!params.get("client_id").equals("clientid")) return false;
-        if (!params.get("client_assertion_type").equals("urn:ietf:params:oauth:client-assertion-type:jwt-bearer"))
-            return false;
         if (!params.get("scope").equals("scope1 scope2")) return false;
 
-        RSACertificateWithPrivateKey keyPair = TestCertificateHelper.load();
-        Jwts.parser().setSigningKey(keyPair.getPrivateKey()).parseClaimsJws(params.get("client_assertion"));
+        if (params.containsKey("client_assertion_type")
+                && params.get("client_assertion_type").equals("urn:ietf:params:oauth:client-assertion-type:jwt-bearer")) {
+
+            RSACertificateWithPrivateKey keyPair = TestCertificateHelper.load();
+            Jwts.parser().setSigningKey(keyPair.getPrivateKey()).parseClaimsJws(params.get("client_assertion"));
+
+        } else {
+            if (!params.get("client_secret").equals("password")) return false;
+        }
 
         return true;
     }

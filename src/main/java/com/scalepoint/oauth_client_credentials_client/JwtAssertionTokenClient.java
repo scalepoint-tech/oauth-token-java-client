@@ -1,4 +1,4 @@
-package com.scalepoint.jwt_assertion_client;
+package com.scalepoint.oauth_client_credentials_client;
 
 import org.apache.commons.lang3.StringUtils;
 

@@ -1,4 +1,4 @@
-package com.scalepoint.jwt_assertion_client;
+package com.scalepoint.oauth_client_credentials_client;
 
 import javax.net.ssl.X509TrustManager;
 import java.security.cert.X509Certificate;

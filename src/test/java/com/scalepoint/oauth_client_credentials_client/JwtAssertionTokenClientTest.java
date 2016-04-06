@@ -1,4 +1,4 @@
-package com.scalepoint.jwt_assertion_client;
+package com.scalepoint.oauth_client_credentials_client;
 
 import org.apache.http.client.HttpResponseException;
 import org.mockserver.integration.ClientAndServer;

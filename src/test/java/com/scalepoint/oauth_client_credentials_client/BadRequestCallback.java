@@ -1,4 +1,4 @@
-package com.scalepoint.jwt_assertion_client;
+package com.scalepoint.oauth_client_credentials_client;
 
 import org.mockserver.mock.action.ExpectationCallback;
 import org.mockserver.model.Header;
