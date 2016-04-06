@@ -15,10 +15,6 @@ import java.util.List;
  */
 public class ClientSecretTokenClient implements TokenClient {
 
-    private static class LazyCacheHolder {
-        public static final TokenCache CACHE = new InMemoryTokenCache();
-    }
-
     private final InternalTokenClient internalTokenClient;
     private final String clientId;
     private final String clientSecret;

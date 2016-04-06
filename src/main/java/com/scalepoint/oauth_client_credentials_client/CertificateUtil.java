@@ -11,7 +11,7 @@ import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 
-class CertificateUtil {
+final class CertificateUtil {
     public static String getThumbprint(Certificate certificate) {
         byte[] der;
         try {

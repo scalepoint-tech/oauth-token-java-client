@@ -16,10 +16,6 @@ import java.util.List;
  */
 public class JwtAssertionTokenClient implements TokenClient {
 
-    private static class LazyCacheHolder {
-        public static final TokenCache CACHE = new InMemoryTokenCache();
-    }
-
     private final JwtAssertionFactory assertionFactory;
     private final InternalTokenClient internalTokenClient;
     private final String clientId;
