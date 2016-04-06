@@ -11,7 +11,6 @@ import java.util.List;
 /**
  * OAuth2 Token endpoint client with client_credentials flow support using "client_secret" client authentication scheme.
  * Tokens are cached in-memory by default.
- *
  */
 public class ClientSecretTokenClient implements TokenClient {
 
@@ -53,26 +52,32 @@ public class ClientSecretTokenClient implements TokenClient {
     /**
      * Retrieve access token for the configured "client_id" and specified scopes. Request to the server is only performed if matching valid token is not in the cache
      *
-     * @param scopes One or more OAuth2 scopes to request
+     * @param scopes OAuth2 scopes to request
      * @return Access token
      * @throws IOException Exception during token endpoint communication
      */
     @Override
     public String getToken(final String... scopes) throws IOException {
-        if (scopes == null || scopes.length < 1) {
-            throw new IllegalArgumentException("At least one scope must be present");
-        }
-        final String scopeString = StringUtils.join(scopes, " ");
+
+        final String scopeString =
+                (scopes == null || scopes.length < 1)
+                        ? null
+                        : StringUtils.join(scopes, " ");
+
         final String cacheKey = StringUtils.join(partialCacheKey, scopeString, ":");
         return cache.get(cacheKey, new TokenSource() {
             @Override
             public ExpiringToken get() throws IOException {
-                final List<NameValuePair> params = Form.form()
+                Form form = Form.form()
                         .add("grant_type", "client_credentials")
                         .add("client_id", clientId)
-                        .add("client_secret", clientSecret)
-                        .add("scope", scopeString)
-                        .build();
+                        .add("client_secret", clientSecret);
+
+                if (scopeString != null) {
+                    form.add("scope", StringUtils.join(scopes, " "));
+                }
+
+                final List<NameValuePair> params = form.build();
                 return internalTokenClient.getToken(params);
             }
         });

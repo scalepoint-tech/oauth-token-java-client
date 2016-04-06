@@ -60,23 +60,29 @@ public class JwtAssertionTokenClient implements TokenClient {
      */
     @Override
     public String getToken(final String... scopes) throws IOException {
-        if (scopes == null || scopes.length < 1) {
-            throw new IllegalArgumentException("At least one scope must be present");
-        }
-        final String scopeString = StringUtils.join(scopes, " ");
+
+        final String scopeString =
+                (scopes == null || scopes.length < 1)
+                        ? null
+                        : StringUtils.join(scopes, " ");
+
         final String cacheKey = StringUtils.join(partialCacheKey, scopeString, ":");
         return cache.get(cacheKey, new TokenSource() {
             @Override
             public ExpiringToken get() throws IOException {
                 String assertionToken = assertionFactory.CreateAssertionToken();
 
-                final List<NameValuePair> params = Form.form()
+                Form form = Form.form()
                         .add("grant_type", "client_credentials")
                         .add("client_id", clientId)
                         .add("client_assertion_type", "urn:ietf:params:oauth:client-assertion-type:jwt-bearer")
-                        .add("client_assertion", assertionToken)
-                        .add("scope", StringUtils.join(scopes, " "))
-                        .build();
+                        .add("client_assertion", assertionToken);
+
+                if (scopeString != null) {
+                    form.add("scope", StringUtils.join(scopes, " "));
+                }
+
+                final List<NameValuePair> params = form.build();
                 return internalTokenClient.getToken(params);
             }
         });

@@ -115,4 +115,20 @@ public class ClientSecretTokenClientTest {
         TokenClient tokenClient = new ClientSecretTokenClient(tokenEndpointUri, "clientid", "password");
         tokenClient.getToken("badRequest");
     }
+
+    @Test
+    public void testEmptyScopes() throws Exception {
+
+        mockServer.when(
+                request()
+                        .withSecure(true)
+                        .withMethod("POST")
+                        .withPath("/oauth2/token"),
+                exactly(1)
+        )
+                .callback(HttpCallback.callback().withCallbackClass(SuccessfulExpectationCallback.class.getName()));
+
+        TokenClient tokenClient = new ClientSecretTokenClient(tokenEndpointUri, "clientid", "password");
+        tokenClient.getToken();
+    }
 }
