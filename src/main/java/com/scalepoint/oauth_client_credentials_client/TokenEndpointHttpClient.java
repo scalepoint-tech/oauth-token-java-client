@@ -10,11 +10,11 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.List;
 
-class InternalTokenClient {
+class TokenEndpointHttpClient {
 
     private final String tokenEndpointUri;
 
-    public InternalTokenClient(String tokenEndpointUri) {
+    public TokenEndpointHttpClient(String tokenEndpointUri) {
         this.tokenEndpointUri = tokenEndpointUri;
     }
 
