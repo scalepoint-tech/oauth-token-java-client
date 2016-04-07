@@ -8,13 +8,13 @@ import java.security.Key;
 import java.util.Date;
 import java.util.UUID;
 
-class JwtAssertionFactory {
+class ClientAssertionJwtFactory {
     private final String tokenEndpointUri;
     private final String clientId;
     private final Key key;
     private final String thumbprint;
 
-    public JwtAssertionFactory(String tokenEndpointUri, String clientId, RSACertificateWithPrivateKey keyPair) {
+    public ClientAssertionJwtFactory(String tokenEndpointUri, String clientId, RSACertificateWithPrivateKey keyPair) {
         this.tokenEndpointUri = tokenEndpointUri;
         this.clientId = clientId;
         this.thumbprint = CertificateUtil.getThumbprint(keyPair.getCertificate());

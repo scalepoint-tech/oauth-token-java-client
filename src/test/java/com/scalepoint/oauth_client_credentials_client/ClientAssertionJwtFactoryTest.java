@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Validate that assertion token is generated according to the specification
  */
 @SuppressWarnings("unused")
-public class JwtAssertionFactoryTest {
+public class ClientAssertionJwtFactoryTest {
 
     private final static String TOKEN_ENDPOINT_URI = "https://foobar";
     private final static String CLIENT_ID = "clientid";
@@ -22,7 +22,7 @@ public class JwtAssertionFactoryTest {
     public void init() {
         RSACertificateWithPrivateKey keyPair = TestCertificateHelper.load();
         thumbprint = CertificateUtil.getThumbprint(keyPair.getCertificate());
-        JwtAssertionFactory factory = new JwtAssertionFactory(TOKEN_ENDPOINT_URI, CLIENT_ID, keyPair);
+        ClientAssertionJwtFactory factory = new ClientAssertionJwtFactory(TOKEN_ENDPOINT_URI, CLIENT_ID, keyPair);
         String tokenString = factory.CreateAssertionToken();
         token = Jwts.parser().setSigningKey(keyPair.getPrivateKey()).parseClaimsJws(tokenString);
     }

@@ -10,9 +10,9 @@ import org.apache.http.client.fluent.Form;
  * @see <a href="https://tools.ietf.org/html/rfc7521#section-6.2">Assertion Framework for OAuth 2.0 Client Authentication and Authorization Grants</a>
  * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#ClientAuthentication">OpenID Connect Core 1.0</a>
  */
-public class JwtAssertionTokenClient extends CustomTokenClient {
+public class ClientAssertionTokenClient extends CustomTokenClient {
 
-    private final JwtAssertionFactory assertionFactory;
+    private final ClientAssertionJwtFactory assertionFactory;
 
     /**
      * OAuth2 Creates new token client
@@ -22,7 +22,7 @@ public class JwtAssertionTokenClient extends CustomTokenClient {
      * @param keyPair          Certificate and private key. Certificate must be signed with SHA256. RSA keys must be 2048 bits long. Certificate must be associated with the client_id on the server.
      */
     @SuppressWarnings({"SameParameterValue", "unused"})
-    public JwtAssertionTokenClient(String tokenEndpointUri, String clientId, RSACertificateWithPrivateKey keyPair) {
+    public ClientAssertionTokenClient(String tokenEndpointUri, String clientId, RSACertificateWithPrivateKey keyPair) {
         this(tokenEndpointUri, clientId, keyPair, LazyCacheHolder.CACHE);
     }
 
@@ -35,12 +35,12 @@ public class JwtAssertionTokenClient extends CustomTokenClient {
      * @param cache            Token cache
      */
     @SuppressWarnings({"WeakerAccess", "SameParameterValue", "unused"})
-    public JwtAssertionTokenClient(String tokenEndpointUri, String clientId, RSACertificateWithPrivateKey keyPair, TokenCache cache) {
+    public ClientAssertionTokenClient(String tokenEndpointUri, String clientId, RSACertificateWithPrivateKey keyPair, TokenCache cache) {
         super(tokenEndpointUri,
                 StringUtils.join(tokenEndpointUri, clientId, CertificateUtil.getThumbprint(keyPair.getCertificate()), "|"),
                 cache);
 
-        this.assertionFactory = new JwtAssertionFactory(tokenEndpointUri, clientId, keyPair);
+        this.assertionFactory = new ClientAssertionJwtFactory(tokenEndpointUri, clientId, keyPair);
     }
 
     @Override

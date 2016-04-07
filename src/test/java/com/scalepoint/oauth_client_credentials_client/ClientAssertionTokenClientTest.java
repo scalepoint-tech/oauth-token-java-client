@@ -20,7 +20,7 @@ import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 
 @SuppressWarnings("unused")
-public class JwtAssertionTokenClientTest {
+public class ClientAssertionTokenClientTest {
 
     private ClientAndServer mockServer;
     private String tokenEndpointUri;
@@ -61,7 +61,7 @@ public class JwtAssertionTokenClientTest {
         )
                 .callback(HttpCallback.callback().withCallbackClass(SuccessfulExpectationCallback.class.getName()));
 
-        TokenClient tokenClient = new JwtAssertionTokenClient(tokenEndpointUri, "clientid", TestCertificateHelper.load());
+        TokenClient tokenClient = new ClientAssertionTokenClient(tokenEndpointUri, "clientid", TestCertificateHelper.load());
         tokenClient.getToken("success");
     }
 
@@ -78,7 +78,7 @@ public class JwtAssertionTokenClientTest {
         )
                 .callback(HttpCallback.callback().withCallbackClass(SuccessfulExpectationCallback.class.getName()));
 
-        TokenClient tokenClient = new JwtAssertionTokenClient(tokenEndpointUri, "clientid", TestCertificateHelper.load());
+        TokenClient tokenClient = new ClientAssertionTokenClient(tokenEndpointUri, "clientid", TestCertificateHelper.load());
         tokenClient.getToken("cache");
         tokenClient.getToken("cache");
         Assert.assertEquals(mockServer.retrieveRecordedRequests(request).length, 1);
@@ -96,7 +96,7 @@ public class JwtAssertionTokenClientTest {
         )
                 .callback(HttpCallback.callback().withCallbackClass(ValidRequestExpectationCallback.class.getName()));
 
-        TokenClient tokenClient = new JwtAssertionTokenClient(tokenEndpointUri, "clientid", TestCertificateHelper.load());
+        TokenClient tokenClient = new ClientAssertionTokenClient(tokenEndpointUri, "clientid", TestCertificateHelper.load());
         tokenClient.getToken("scope1", "scope2");
     }
 
@@ -112,7 +112,7 @@ public class JwtAssertionTokenClientTest {
         )
                 .callback(HttpCallback.callback().withCallbackClass(BadRequestCallback.class.getName()));
 
-        TokenClient tokenClient = new JwtAssertionTokenClient(tokenEndpointUri, "clientid", TestCertificateHelper.load());
+        TokenClient tokenClient = new ClientAssertionTokenClient(tokenEndpointUri, "clientid", TestCertificateHelper.load());
         tokenClient.getToken("badRequest");
     }
 
@@ -128,7 +128,7 @@ public class JwtAssertionTokenClientTest {
         )
                 .callback(HttpCallback.callback().withCallbackClass(SuccessfulExpectationCallback.class.getName()));
 
-        TokenClient tokenClient = new JwtAssertionTokenClient(tokenEndpointUri, "clientid", TestCertificateHelper.load());
+        TokenClient tokenClient = new ClientAssertionTokenClient(tokenEndpointUri, "clientid", TestCertificateHelper.load());
         tokenClient.getToken();
     }
 
