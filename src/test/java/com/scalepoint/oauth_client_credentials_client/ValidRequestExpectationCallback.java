@@ -31,7 +31,6 @@ public class ValidRequestExpectationCallback implements ExpectationCallback {
         for (NameValuePair p : parsedParams) params.put(p.getName(), p.getValue());
 
         if (!params.get("grant_type").equals("client_credentials")) return false;
-        if (!params.get("client_id").equals("clientid")) return false;
         if (!params.get("scope").equals("scope1 scope2")) return false;
 
         if (params.containsKey("client_assertion_type")
@@ -41,6 +40,7 @@ public class ValidRequestExpectationCallback implements ExpectationCallback {
             Jwts.parser().setSigningKey(keyPair.getPrivateKey()).parseClaimsJws(params.get("client_assertion"));
 
         } else {
+            if (!params.get("client_id").equals("clientid")) return false;
             if (!params.get("client_secret").equals("password")) return false;
         }
 

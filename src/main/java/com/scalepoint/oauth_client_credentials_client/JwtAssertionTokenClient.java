@@ -13,7 +13,6 @@ import org.apache.http.client.fluent.Form;
 public class JwtAssertionTokenClient extends CustomTokenClient {
 
     private final JwtAssertionFactory assertionFactory;
-    private final String clientId;
 
     /**
      * OAuth2 Creates new token client
@@ -42,7 +41,6 @@ public class JwtAssertionTokenClient extends CustomTokenClient {
                 cache);
 
         this.assertionFactory = new JwtAssertionFactory(tokenEndpointUri, clientId, keyPair);
-        this.clientId = clientId;
     }
 
     @Override
@@ -50,7 +48,6 @@ public class JwtAssertionTokenClient extends CustomTokenClient {
         String assertionToken = assertionFactory.CreateAssertionToken();
 
         form.add("grant_type", "client_credentials")
-                .add("client_id", clientId)
                 .add("client_assertion_type", "urn:ietf:params:oauth:client-assertion-type:jwt-bearer")
                 .add("client_assertion", assertionToken);
     }
