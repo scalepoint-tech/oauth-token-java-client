@@ -8,7 +8,7 @@
     <packaging>jar</packaging>
 
     <name>OAuth2 Token Endpoint Client</name>
-    <description>Client helper for OAuth 2.0 Token endpoint. Supports "Client Credentials" flow with "client_secret" and RS256 JWT "client_assertion" and custom grants</description>
+    <description>Client helper for OAuth 2.0 Token endpoint. Supports "Client Credentials" flow with "client_secret", RS256 JWT "client_assertion" and custom grants.</description>
     <url>https://github.com/Scalepoint/oauth-token-java-client</url>
     <organization>
         <name>Scalepoint Technologies Ltd.</name>
