@@ -1,4 +1,4 @@
-package com.scalepoint.oauth_client_credentials_client;
+package com.scalepoint.oauth_token_client;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;

@@ -1,4 +1,4 @@
-package com.scalepoint.oauth_client_credentials_client;
+package com.scalepoint.oauth_token_client;
 
 import java.io.FileInputStream;
 import java.io.IOException;

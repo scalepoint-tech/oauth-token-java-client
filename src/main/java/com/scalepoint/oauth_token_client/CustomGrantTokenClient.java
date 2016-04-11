@@ -1,4 +1,4 @@
-package com.scalepoint.oauth_client_credentials_client;
+package com.scalepoint.oauth_token_client;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.fluent.Form;

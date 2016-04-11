@@ -1,4 +1,4 @@
-package com.scalepoint.oauth_client_credentials_client;
+package com.scalepoint.oauth_token_client;
 
 import org.apache.http.client.HttpResponseException;
 import org.mockserver.integration.ClientAndServer;
@@ -20,7 +20,7 @@ import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 
 @SuppressWarnings("unused")
-public class ClientAssertionTokenClientTest {
+public class ClientSecretTokenClientTest {
 
     private ClientAndServer mockServer;
     private String tokenEndpointUri;
@@ -61,7 +61,7 @@ public class ClientAssertionTokenClientTest {
         )
                 .callback(HttpCallback.callback().withCallbackClass(SuccessfulExpectationCallback.class.getName()));
 
-        TokenClient tokenClient = new ClientAssertionTokenClient(tokenEndpointUri, "clientid", TestCertificateHelper.load());
+        TokenClient tokenClient = new ClientSecretTokenClient(tokenEndpointUri, "clientid", "password");
         tokenClient.getToken("success");
     }
 
@@ -78,7 +78,7 @@ public class ClientAssertionTokenClientTest {
         )
                 .callback(HttpCallback.callback().withCallbackClass(SuccessfulExpectationCallback.class.getName()));
 
-        TokenClient tokenClient = new ClientAssertionTokenClient(tokenEndpointUri, "clientid", TestCertificateHelper.load());
+        TokenClient tokenClient = new ClientSecretTokenClient(tokenEndpointUri, "clientid", "password");
         tokenClient.getToken("cache");
         tokenClient.getToken("cache");
         Assert.assertEquals(mockServer.retrieveRecordedRequests(request).length, 1);
@@ -96,7 +96,7 @@ public class ClientAssertionTokenClientTest {
         )
                 .callback(HttpCallback.callback().withCallbackClass(ValidRequestExpectationCallback.class.getName()));
 
-        TokenClient tokenClient = new ClientAssertionTokenClient(tokenEndpointUri, "clientid", TestCertificateHelper.load());
+        TokenClient tokenClient = new ClientSecretTokenClient(tokenEndpointUri, "clientid", "password");
         tokenClient.getToken("scope1", "scope2");
     }
 
@@ -112,7 +112,7 @@ public class ClientAssertionTokenClientTest {
         )
                 .callback(HttpCallback.callback().withCallbackClass(BadRequestCallback.class.getName()));
 
-        TokenClient tokenClient = new ClientAssertionTokenClient(tokenEndpointUri, "clientid", TestCertificateHelper.load());
+        TokenClient tokenClient = new ClientSecretTokenClient(tokenEndpointUri, "clientid", "password");
         tokenClient.getToken("badRequest");
     }
 
@@ -128,8 +128,7 @@ public class ClientAssertionTokenClientTest {
         )
                 .callback(HttpCallback.callback().withCallbackClass(SuccessfulExpectationCallback.class.getName()));
 
-        TokenClient tokenClient = new ClientAssertionTokenClient(tokenEndpointUri, "clientid", TestCertificateHelper.load());
+        TokenClient tokenClient = new ClientSecretTokenClient(tokenEndpointUri, "clientid", "password");
         tokenClient.getToken();
     }
-
 }

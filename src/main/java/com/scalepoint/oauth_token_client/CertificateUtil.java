@@ -1,4 +1,4 @@
-package com.scalepoint.oauth_client_credentials_client;
+package com.scalepoint.oauth_token_client;
 
 import io.jsonwebtoken.impl.Base64UrlCodec;
 

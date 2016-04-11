@@ -3,13 +3,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.scalepoint</groupId>
-    <artifactId>oauth-client-credentials-client</artifactId>
+    <artifactId>oauth-token-client</artifactId>
     <version>1.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>OAuth2 Client Credentials Client</name>
-    <description>Client helper for OAuth 2.0 "Client Credentials" flow with "client_secret" and RS256 JWT "client_assertion"</description>
-    <url>https://github.com/Scalepoint/oauth-client-credentials-java-client</url>
+    <name>OAuth2 Token Endpoint Client</name>
+    <description>Client helper for OAuth 2.0 Token endpoint. Supports "Client Credentials" flow with "client_secret" and RS256 JWT "client_assertion" and custom grants</description>
+    <url>https://github.com/Scalepoint/oauth-token-java-client</url>
     <organization>
         <name>Scalepoint Technologies Ltd.</name>
     </organization>
@@ -28,9 +28,9 @@
         </license>
     </licenses>
     <scm>
-        <connection>scm:git:git@github.com:Scalepoint/oauth-client-credentials-java-client.git</connection>
-        <developerConnection>scm:git:git@github.com:Scalepoint/oauth-client-credentials-java-client.git</developerConnection>
-        <url>https://github.com/Scalepoint/oauth-client-credentials-java-client.git</url>
+        <connection>scm:git:git@github.com:Scalepoint/oauth-token-java-client.git</connection>
+        <developerConnection>scm:git:git@github.com:Scalepoint/oauth-token-java-client.git</developerConnection>
+        <url>https://github.com/Scalepoint/oauth-token-java-client.git</url>
     </scm>
 
     <properties>
