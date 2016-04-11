@@ -2,13 +2,15 @@ package com.scalepoint.oauth_client_credentials_client;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.client.fluent.Form;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * OAuth2 Token endpoint client with client_credentials flow support using "client_secret" client authentication scheme.
  * Tokens are cached in-memory by default.
  */
-public class ClientSecretTokenClient extends CustomTokenClient {
+public class ClientSecretTokenClient extends CustomGrantTokenClient {
 
     private final String clientId;
     private final String clientSecret;
@@ -41,9 +43,12 @@ public class ClientSecretTokenClient extends CustomTokenClient {
     }
 
     @Override
-    protected void addCustomFields(Form form) {
-        form.add("grant_type", "client_credentials")
-                .add("client_id", clientId)
-                .add("client_secret", clientSecret);
+    protected List<NameValuePair> getPostParams() {
+        ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new NameValuePair("grant_type", "client_credentials"));
+        params.add(new NameValuePair("client_id", clientId));
+        params.add(new NameValuePair("client_secret", clientSecret));
+        return params;
     }
+
 }

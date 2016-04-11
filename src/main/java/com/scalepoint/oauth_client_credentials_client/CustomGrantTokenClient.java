@@ -1,19 +1,18 @@
 package com.scalepoint.oauth_client_credentials_client;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.fluent.Form;
 
 import java.io.IOException;
 import java.util.List;
 
-public abstract class CustomTokenClient implements TokenClient {
+public abstract class CustomGrantTokenClient implements TokenClient {
     private final TokenEndpointHttpClient tokenEndpointHttpClient;
     private final String partialCacheKey;
     private final TokenCache cache;
 
     @SuppressWarnings("WeakerAccess")
-    public CustomTokenClient(String tokenEndpointUri, String partialCacheKey, TokenCache cache) {
+    public CustomGrantTokenClient(String tokenEndpointUri, String partialCacheKey, TokenCache cache) {
         this.tokenEndpointHttpClient = new TokenEndpointHttpClient(tokenEndpointUri);
         this.partialCacheKey = partialCacheKey;
         this.cache = cache;
@@ -41,18 +40,33 @@ public abstract class CustomTokenClient implements TokenClient {
 
                 Form form = Form.form();
 
-                addCustomFields(form);
+                for (NameValuePair pair : getPostParams()) {
+                    form.add(pair.getName(), pair.getValue());
+                }
 
                 if (scopes != null) {
                     form.add("scope", scopeString);
                 }
 
-                final List<NameValuePair> params = form.build();
-                return tokenEndpointHttpClient.getToken(params);
-
+                return tokenEndpointHttpClient.getToken(form.build());
             }
         });
     }
 
-    protected abstract void addCustomFields(Form form);
+    /**
+     * @return List of token endpoint parameters excluding "scope", which is added automatically
+     * <pre>
+     * Example:
+     * {@code
+     *  @Override
+     *  protected List<NameValuePair> getPostParams() {
+     *      ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+     *      params.add(new NameValuePair("grant_type", "urn:ietf:params:oauth:grant-type:jwt-bearer"));
+     *      params.add(new NameValuePair("assertion", getAssertionJwt()));
+     *      return params;
+     *  }
+     * }
+     * </pre>
+     */
+    protected abstract List<NameValuePair> getPostParams();
 }

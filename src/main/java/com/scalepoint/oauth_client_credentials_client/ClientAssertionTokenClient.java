@@ -1,7 +1,9 @@
 package com.scalepoint.oauth_client_credentials_client;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.client.fluent.Form;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * OAuth2 Token endpoint client with client_credentials flow support using "private_key_jwt" client authentication scheme.
@@ -10,7 +12,7 @@ import org.apache.http.client.fluent.Form;
  * @see <a href="https://tools.ietf.org/html/rfc7521#section-6.2">Assertion Framework for OAuth 2.0 Client Authentication and Authorization Grants</a>
  * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#ClientAuthentication">OpenID Connect Core 1.0</a>
  */
-public class ClientAssertionTokenClient extends CustomTokenClient {
+public class ClientAssertionTokenClient extends CustomGrantTokenClient {
 
     private final ClientAssertionJwtFactory assertionFactory;
 
@@ -44,12 +46,13 @@ public class ClientAssertionTokenClient extends CustomTokenClient {
     }
 
     @Override
-    protected void addCustomFields(Form form) {
+    protected List<NameValuePair> getPostParams() {
         String assertionToken = assertionFactory.CreateAssertionToken();
-
-        form.add("grant_type", "client_credentials")
-                .add("client_assertion_type", "urn:ietf:params:oauth:client-assertion-type:jwt-bearer")
-                .add("client_assertion", assertionToken);
+        ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new NameValuePair("grant_type", "client_credentials"));
+        params.add(new NameValuePair("client_assertion_type", "urn:ietf:params:oauth:client-assertion-type:jwt-bearer"));
+        params.add(new NameValuePair("client_assertion", assertionToken));
+        return params;
     }
 
 }
