@@ -56,9 +56,9 @@ public abstract class CustomGrantTokenClient implements TokenClient {
     /**
      * @return List of token endpoint parameters excluding "scope", which is added automatically
      * <pre>
-     * Example:
+     * &#64;Override
      * {@code
-     *  @Override
+     *
      *  protected List<NameValuePair> getPostParams() {
      *      ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
      *      params.add(new NameValuePair("grant_type", "urn:ietf:params:oauth:grant-type:jwt-bearer"));
