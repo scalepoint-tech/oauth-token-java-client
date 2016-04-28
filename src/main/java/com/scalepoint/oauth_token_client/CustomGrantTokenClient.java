@@ -14,7 +14,7 @@ public abstract class CustomGrantTokenClient implements TokenClient {
 
     public CustomGrantTokenClient(String tokenEndpointUri, String partialCacheKey, TokenCache cache) {
         this.tokenEndpointHttpClient = new TokenEndpointHttpClient(tokenEndpointUri);
-        this.partialCacheKey = partialCacheKey;
+        this.partialCacheKey = StringUtils.join(new String[]{tokenEndpointUri, partialCacheKey}, ':');
         this.cache = cache;
     }
 
@@ -33,7 +33,7 @@ public abstract class CustomGrantTokenClient implements TokenClient {
                         ? null
                         : StringUtils.join(scopes, " ");
 
-        final String cacheKey = StringUtils.join(partialCacheKey, scopeString, ":");
+        final String cacheKey = StringUtils.join(new String[]{partialCacheKey, scopeString}, ':');
         return cache.get(cacheKey, new TokenSource() {
             @Override
             public ExpiringToken get() throws IOException {
