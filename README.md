@@ -29,7 +29,14 @@ Obtaining access token from token endpoint is as simple as this:
 ###### private_key_jwt ######
 
 ```java
-TokenClient tokenClient = new ClientAssertionTokenClient(tokenEndpointUri, clientId, keyPair);
+TokenClient tokenClient = new ClientCredentialsGrantTokenClient(
+                                tokenEndpointUri,
+                                new JwtBearerClientAssertionCredentials(
+                                    tokenEndpointUri,
+                                    clientId,
+                                    keyPair
+                          ));
+
 String accessToken = tokenClient.getToken("scope1", "scope2");
 ```
 
@@ -38,6 +45,10 @@ _Check [here](src/test/java/com/scalepoint/jwt_assertion_client/TestCertificateH
 ###### client_secret ######
 
 ```java
-TokenClient tokenClient = new ClientSecretTokenClient(tokenEndpointUri, clientId, clientSecret);
+TokenClient tokenClient = new ClientCredentialsGrantTokenClient(
+                                tokenEndpointUri,
+                                new ClientSecretCredentials(clientId, clientSecret)
+                          );
+
 String accessToken = tokenClient.getToken("scope1", "scope2");
 ```
