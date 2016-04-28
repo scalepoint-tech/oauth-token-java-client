@@ -61,7 +61,7 @@ public class ClientSecretTokenClientTest {
         )
                 .callback(HttpCallback.callback().withCallbackClass(SuccessfulExpectationCallback.class.getName()));
 
-        TokenClient tokenClient = new ClientSecretTokenClient(tokenEndpointUri, "clientid", "password");
+        TokenClient tokenClient = new ClientCredentialsGrantTokenClient(tokenEndpointUri, new ClientSecretCredentials("clientid", "password"));
         tokenClient.getToken("success");
     }
 
@@ -78,7 +78,7 @@ public class ClientSecretTokenClientTest {
         )
                 .callback(HttpCallback.callback().withCallbackClass(SuccessfulExpectationCallback.class.getName()));
 
-        TokenClient tokenClient = new ClientSecretTokenClient(tokenEndpointUri, "clientid", "password");
+        TokenClient tokenClient = new ClientCredentialsGrantTokenClient(tokenEndpointUri, new ClientSecretCredentials("clientid", "password"));
         tokenClient.getToken("cache");
         tokenClient.getToken("cache");
         Assert.assertEquals(mockServer.retrieveRecordedRequests(request).length, 1);
@@ -96,7 +96,7 @@ public class ClientSecretTokenClientTest {
         )
                 .callback(HttpCallback.callback().withCallbackClass(ValidRequestExpectationCallback.class.getName()));
 
-        TokenClient tokenClient = new ClientSecretTokenClient(tokenEndpointUri, "clientid", "password");
+        TokenClient tokenClient = new ClientCredentialsGrantTokenClient(tokenEndpointUri, new ClientSecretCredentials("clientid", "password"));
         tokenClient.getToken("scope1", "scope2");
     }
 
@@ -112,7 +112,7 @@ public class ClientSecretTokenClientTest {
         )
                 .callback(HttpCallback.callback().withCallbackClass(BadRequestCallback.class.getName()));
 
-        TokenClient tokenClient = new ClientSecretTokenClient(tokenEndpointUri, "clientid", "password");
+        TokenClient tokenClient = new ClientCredentialsGrantTokenClient(tokenEndpointUri, new ClientSecretCredentials("clientid", "password"));
         tokenClient.getToken("badRequest");
     }
 
@@ -128,7 +128,7 @@ public class ClientSecretTokenClientTest {
         )
                 .callback(HttpCallback.callback().withCallbackClass(SuccessfulExpectationCallback.class.getName()));
 
-        TokenClient tokenClient = new ClientSecretTokenClient(tokenEndpointUri, "clientid", "password");
+        TokenClient tokenClient = new ClientCredentialsGrantTokenClient(tokenEndpointUri, new ClientSecretCredentials("clientid", "password"));
         tokenClient.getToken();
     }
 }

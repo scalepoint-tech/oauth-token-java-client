@@ -6,12 +6,12 @@ import org.apache.http.client.fluent.Form;
 import java.io.IOException;
 import java.util.List;
 
+@SuppressWarnings("WeakerAccess")
 public abstract class CustomGrantTokenClient implements TokenClient {
     private final TokenEndpointHttpClient tokenEndpointHttpClient;
     private final String partialCacheKey;
     private final TokenCache cache;
 
-    @SuppressWarnings("WeakerAccess")
     public CustomGrantTokenClient(String tokenEndpointUri, String partialCacheKey, TokenCache cache) {
         this.tokenEndpointHttpClient = new TokenEndpointHttpClient(tokenEndpointUri);
         this.partialCacheKey = partialCacheKey;
