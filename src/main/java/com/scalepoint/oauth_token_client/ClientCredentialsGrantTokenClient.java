@@ -41,4 +41,9 @@ public class ClientCredentialsGrantTokenClient extends CustomGrantTokenClient {
         params.addAll(clientCredentials.getPostParams());
         return params;
     }
+
+    @Override
+    protected String getGrantType() {
+        return "client_credentials";
+    }
 }

@@ -33,18 +33,19 @@ public abstract class CustomGrantTokenClient implements TokenClient {
                         ? null
                         : StringUtils.join(scopes, " ");
 
-        final String cacheKey = StringUtils.join(new String[]{partialCacheKey, scopeString}, ':');
+        final String cacheKey = StringUtils.join(new String[]{partialCacheKey, getGrantType(), scopeString}, ':');
         return cache.get(cacheKey, new TokenSource() {
             @Override
             public ExpiringToken get() throws IOException {
 
                 Form form = Form.form();
+                form.add("grant_type",  getGrantType());
 
                 for (NameValuePair pair : getPostParams()) {
                     form.add(pair.getName(), pair.getValue());
                 }
 
-                if (scopes != null) {
+                if (scopeString != null) {
                     form.add("scope", scopeString);
                 }
 
@@ -69,4 +70,9 @@ public abstract class CustomGrantTokenClient implements TokenClient {
      * </pre>
      */
     protected abstract List<NameValuePair> getPostParams();
+
+    /**
+     * @return Grant type (i.e. "client_credentials")
+     */
+    protected abstract String getGrantType();
 }

@@ -23,10 +23,14 @@ public class DelegateAccessGrantTokenClient extends CustomGrantTokenClient {
     @Override
     protected List<NameValuePair> getPostParams() {
         ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
-        params.add(new NameValuePair("grant_type", "urn:scalepoint:params:oauth:grant-type:delegate-access"));
         params.addAll(clientCredentials.getPostParams());
         params.add(new NameValuePair("resource", resource));
         params.add(new NameValuePair("amr", amr));
         return params;
+    }
+
+    @Override
+    protected String getGrantType() {
+        return "urn:scalepoint:params:oauth:grant-type:delegate-access";
     }
 }
