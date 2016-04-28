@@ -28,6 +28,7 @@ public class ClientCredentialsGrantTokenClient extends CustomGrantTokenClient {
      * @param clientCredentials OAuth2 client credentials
      * @param cache             Token cache
      */
+    @SuppressWarnings("SameParameterValue")
     public ClientCredentialsGrantTokenClient(String tokenEndpointUri, ClientCredentials clientCredentials, TokenCache cache) {
         super(tokenEndpointUri, clientCredentials.getCredentialThumbprint(), cache);
         this.clientCredentials = clientCredentials;

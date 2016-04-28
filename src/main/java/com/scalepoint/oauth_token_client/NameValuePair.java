@@ -3,6 +3,7 @@ package com.scalepoint.oauth_token_client;
 /**
  * Name value pair
  */
+@SuppressWarnings("WeakerAccess")
 public class NameValuePair {
     final String name;
     final String value;

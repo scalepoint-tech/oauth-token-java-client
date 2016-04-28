@@ -23,6 +23,7 @@ public class JwtBearerClientAssertionCredentials implements ClientCredentials {
      * @param clientId         OAuth2 "client_id"
      * @param keyPair          Certificate and private key. Certificate must be signed with SHA256. RSA keys must be 2048 bits long. Certificate must be associated with the client_id on the server.
      */
+    @SuppressWarnings("SameParameterValue")
     public JwtBearerClientAssertionCredentials(String tokenEndpointUri, String clientId, RSACertificateWithPrivateKey keyPair) {
         this.assertionFactory = new ClientAssertionJwtFactory(tokenEndpointUri, clientId, keyPair);
         this.credentialThumbprint = DigestUtils.sha1Hex(

@@ -20,6 +20,7 @@ public class ClientSecretCredentials implements ClientCredentials {
      * @param clientId     OAuth2 "client_id"
      * @param clientSecret OAuth2 "client_secret"
      */
+    @SuppressWarnings("SameParameterValue")
     public ClientSecretCredentials(String clientId, String clientSecret) {
         this.clientId = clientId;
         this.clientSecret = clientSecret;

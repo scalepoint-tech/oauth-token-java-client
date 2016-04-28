@@ -1,6 +1,5 @@
 package com.scalepoint.oauth_token_client;
 
-import io.jsonwebtoken.Jwts;
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
@@ -12,8 +11,7 @@ import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
 
-@SuppressWarnings("unused")
-public class ValidRequestExpectationCallback implements ExpectationCallback {
+abstract class ValidRequestExpectationCallback implements ExpectationCallback {
     @Override
     public HttpResponse handle(HttpRequest httpRequest) {
 
@@ -29,21 +27,8 @@ public class ValidRequestExpectationCallback implements ExpectationCallback {
         List<NameValuePair> parsedParams = URLEncodedUtils.parse(body, Charset.forName(CharEncoding.UTF_8));
         HashMap<String, String> params = new HashMap<String, String>();
         for (NameValuePair p : parsedParams) params.put(p.getName(), p.getValue());
-
-        if (!params.get("grant_type").equals("client_credentials")) return false;
-        if (!params.get("scope").equals("scope1 scope2")) return false;
-
-        if (params.containsKey("client_assertion_type")
-                && params.get("client_assertion_type").equals("urn:ietf:params:oauth:client-assertion-type:jwt-bearer")) {
-
-            RSACertificateWithPrivateKey keyPair = TestCertificateHelper.load();
-            Jwts.parser().setSigningKey(keyPair.getPrivateKey()).parseClaimsJws(params.get("client_assertion"));
-
-        } else {
-            if (!params.get("client_id").equals("clientid")) return false;
-            if (!params.get("client_secret").equals("password")) return false;
-        }
-
-        return true;
+        return isValid(params);
     }
+
+    protected abstract boolean isValid(HashMap<String, String> params);
 }

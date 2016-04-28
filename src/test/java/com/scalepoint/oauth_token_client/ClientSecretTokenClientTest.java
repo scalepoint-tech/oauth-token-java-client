@@ -1,53 +1,16 @@
 package com.scalepoint.oauth_token_client;
 
 import org.apache.http.client.HttpResponseException;
-import org.mockserver.integration.ClientAndServer;
 import org.mockserver.model.HttpCallback;
 import org.mockserver.model.HttpRequest;
-import org.mockserver.socket.PortFactory;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 
 import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 
 @SuppressWarnings("unused")
-public class ClientSecretTokenClientTest {
-
-    private ClientAndServer mockServer;
-    private String tokenEndpointUri;
-
-    @BeforeClass
-    public void disableCertificateValidation() throws NoSuchAlgorithmException, KeyManagementException {
-        SSLContext sc = SSLContext.getInstance("TLS");
-        sc.init(null, new TrustManager[]{new TrustAllX509TrustManager()}, new java.security.SecureRandom());
-        SSLContext.setDefault(sc);
-    }
-
-    @BeforeClass
-    public void start() {
-        int port = PortFactory.findFreePort();
-        tokenEndpointUri = "https://localhost:" + port + "/oauth2/token";
-        mockServer = ClientAndServer.startClientAndServer(port);
-    }
-
-    @BeforeMethod
-    public void reset() {
-        mockServer.reset();
-    }
-
-    @AfterClass
-    public void stop() {
-        mockServer.stop();
-    }
+public class ClientSecretTokenClientTest extends MockServerTestBase {
 
     @Test
     public void testSuccess() throws Exception {
@@ -94,7 +57,7 @@ public class ClientSecretTokenClientTest {
                         .withPath("/oauth2/token"),
                 exactly(1)
         )
-                .callback(HttpCallback.callback().withCallbackClass(ValidRequestExpectationCallback.class.getName()));
+                .callback(HttpCallback.callback().withCallbackClass(ValidClientSecretExpectationCallback.class.getName()));
 
         TokenClient tokenClient = new ClientCredentialsGrantTokenClient(tokenEndpointUri, new ClientSecretCredentials("clientid", "password"));
         tokenClient.getToken("scope1", "scope2");

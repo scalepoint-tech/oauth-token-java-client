@@ -15,6 +15,7 @@ public class DelegateAccessGrantTokenClient extends CustomGrantTokenClient {
     private final String resource;
     private final String amr;
 
+    @SuppressWarnings("SameParameterValue")
     public DelegateAccessGrantTokenClient(String tokenEndpointUri, ClientCredentials clientCredentials, String resource, String amr) {
         super(tokenEndpointUri, clientCredentials.getCredentialThumbprint(), new NoCache());
         this.clientCredentials = clientCredentials;
