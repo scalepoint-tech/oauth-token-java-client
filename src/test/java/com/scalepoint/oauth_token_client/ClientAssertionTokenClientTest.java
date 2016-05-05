@@ -24,7 +24,7 @@ public class ClientAssertionTokenClientTest extends MockServerTestBase {
         )
                 .callback(HttpCallback.callback().withCallbackClass(SuccessfulExpectationCallback.class.getName()));
 
-        TokenClient tokenClient = new ClientCredentialsGrantTokenClient(
+        ClientCredentialsGrantTokenClient tokenClient = new ClientCredentialsGrantTokenClient(
                 tokenEndpointUri,
                 new JwtBearerClientAssertionCredentials(
                         tokenEndpointUri,
@@ -48,7 +48,7 @@ public class ClientAssertionTokenClientTest extends MockServerTestBase {
         )
                 .callback(HttpCallback.callback().withCallbackClass(SuccessfulExpectationCallback.class.getName()));
 
-        TokenClient tokenClient = new ClientCredentialsGrantTokenClient(
+        ClientCredentialsGrantTokenClient tokenClient = new ClientCredentialsGrantTokenClient(
                 tokenEndpointUri,
                 new JwtBearerClientAssertionCredentials(
                         tokenEndpointUri,
@@ -73,7 +73,7 @@ public class ClientAssertionTokenClientTest extends MockServerTestBase {
         )
                 .callback(HttpCallback.callback().withCallbackClass(ValidClientAssertionExpectationCallback.class.getName()));
 
-        TokenClient tokenClient = new ClientCredentialsGrantTokenClient(
+        ClientCredentialsGrantTokenClient tokenClient = new ClientCredentialsGrantTokenClient(
                 tokenEndpointUri,
                 new JwtBearerClientAssertionCredentials(
                         tokenEndpointUri,
@@ -96,7 +96,7 @@ public class ClientAssertionTokenClientTest extends MockServerTestBase {
         )
                 .callback(HttpCallback.callback().withCallbackClass(BadRequestCallback.class.getName()));
 
-        TokenClient tokenClient = new ClientCredentialsGrantTokenClient(
+        ClientCredentialsGrantTokenClient tokenClient = new ClientCredentialsGrantTokenClient(
                 tokenEndpointUri,
                 new JwtBearerClientAssertionCredentials(
                         tokenEndpointUri,
@@ -119,7 +119,7 @@ public class ClientAssertionTokenClientTest extends MockServerTestBase {
         )
                 .callback(HttpCallback.callback().withCallbackClass(SuccessfulExpectationCallback.class.getName()));
 
-        TokenClient tokenClient = new ClientCredentialsGrantTokenClient(
+        ClientCredentialsGrantTokenClient tokenClient = new ClientCredentialsGrantTokenClient(
                 tokenEndpointUri,
                 new JwtBearerClientAssertionCredentials(
                         tokenEndpointUri,

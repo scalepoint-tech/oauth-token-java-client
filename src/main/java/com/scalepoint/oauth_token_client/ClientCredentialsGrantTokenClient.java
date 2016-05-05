@@ -1,7 +1,7 @@
 package com.scalepoint.oauth_token_client;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
+import java.util.Collections;
 
 /**
  * OAuth2 Token endpoint client with "client_credentials" flow support
@@ -9,7 +9,6 @@ import java.util.List;
  */
 @SuppressWarnings("WeakerAccess")
 public class ClientCredentialsGrantTokenClient extends CustomGrantTokenClient {
-    private final ClientCredentials clientCredentials;
 
     /**
      * OAuth2 Creates new token client
@@ -30,16 +29,19 @@ public class ClientCredentialsGrantTokenClient extends CustomGrantTokenClient {
      */
     @SuppressWarnings("SameParameterValue")
     public ClientCredentialsGrantTokenClient(String tokenEndpointUri, ClientCredentials clientCredentials, TokenCache cache) {
-        super(tokenEndpointUri, clientCredentials.getCredentialThumbprint(), cache);
-        this.clientCredentials = clientCredentials;
+        super(tokenEndpointUri, clientCredentials, cache);
     }
 
-    @Override
-    protected List<NameValuePair> getPostParams() {
-        ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
-        params.add(new NameValuePair("grant_type", "client_credentials"));
-        params.addAll(clientCredentials.getPostParams());
-        return params;
+    /**
+     * Retrieve access token for the configured "client_id" and specified scopes. Request to the server is only performed if matching valid token is not in the cache
+     *
+     * @param scopes OAuth2 scopes to request
+     * @return Access token
+     * @throws IOException Exception during token endpoint communication
+     */
+    @SuppressWarnings("UnusedReturnValue")
+    public String getToken(final String... scopes) throws IOException {
+        return getTokenInternal(Collections.<NameValuePair>emptyList(), scopes);
     }
 
     @Override

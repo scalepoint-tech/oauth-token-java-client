@@ -7,41 +7,49 @@ import java.io.IOException;
 import java.util.List;
 
 @SuppressWarnings("WeakerAccess")
-public abstract class CustomGrantTokenClient implements TokenClient {
+public abstract class CustomGrantTokenClient {
+    private final ClientCredentials clientCredentials;
     private final TokenEndpointHttpClient tokenEndpointHttpClient;
     private final String partialCacheKey;
     private final TokenCache cache;
 
-    public CustomGrantTokenClient(String tokenEndpointUri, String partialCacheKey, TokenCache cache) {
+    public CustomGrantTokenClient(String tokenEndpointUri, ClientCredentials clientCredentials, TokenCache cache) {
         this.tokenEndpointHttpClient = new TokenEndpointHttpClient(tokenEndpointUri);
-        this.partialCacheKey = StringUtils.join(new String[]{tokenEndpointUri, partialCacheKey}, ':');
+        this.clientCredentials = clientCredentials;
+        this.partialCacheKey = StringUtils.join(new String[]{tokenEndpointUri, clientCredentials.getCredentialThumbprint()}, ':');
         this.cache = cache;
     }
 
     /**
      * Retrieve access token for the configured "client_id" and specified scopes. Request to the server is only performed if matching valid token is not in the cache
      *
-     * @param scopes OAuth2 scopes to request
+     * @param parameters Grant-specific parameters
+     * @param scopes     OAuth2 scopes to request
      * @return Access token
      * @throws IOException Exception during token endpoint communication
      */
-    @Override
-    public String getToken(final String... scopes) throws IOException {
+    protected String getTokenInternal(final List<NameValuePair> parameters, final String... scopes) throws IOException {
 
         final String scopeString =
                 (scopes == null || scopes.length < 1)
                         ? null
                         : StringUtils.join(scopes, " ");
 
-        final String cacheKey = StringUtils.join(new String[]{partialCacheKey, getGrantType(), scopeString}, ':');
+        final String cacheKey = StringUtils.join(new String[]{partialCacheKey, getGrantType(), scopeString, String.valueOf(parameters.hashCode())}, ':');
+
         return cache.get(cacheKey, new TokenSource() {
             @Override
             public ExpiringToken get() throws IOException {
 
                 Form form = Form.form();
-                form.add("grant_type",  getGrantType());
 
-                for (NameValuePair pair : getPostParams()) {
+                form.add("grant_type", getGrantType());
+
+                for (NameValuePair pair : clientCredentials.getPostParams()) {
+                    form.add(pair.getName(), pair.getValue());
+                }
+
+                for (NameValuePair pair : parameters) {
                     form.add(pair.getName(), pair.getValue());
                 }
 
@@ -53,23 +61,6 @@ public abstract class CustomGrantTokenClient implements TokenClient {
             }
         });
     }
-
-    /**
-     * @return List of token endpoint parameters excluding "scope", which is added automatically
-     * <pre>
-     * &#64;Override
-     * {@code
-     *
-     *  protected List<NameValuePair> getPostParams() {
-     *      ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
-     *      params.add(new NameValuePair("grant_type", "urn:ietf:params:oauth:grant-type:jwt-bearer"));
-     *      params.add(new NameValuePair("assertion", getAssertionJwt()));
-     *      return params;
-     *  }
-     * }
-     * </pre>
-     */
-    protected abstract List<NameValuePair> getPostParams();
 
     /**
      * @return Grant type (i.e. "client_credentials")

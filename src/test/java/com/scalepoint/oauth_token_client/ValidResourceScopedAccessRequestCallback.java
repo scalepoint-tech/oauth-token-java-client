@@ -4,12 +4,12 @@ import io.jsonwebtoken.Jwts;
 
 import java.util.HashMap;
 
-public class ValidDelegationRequestCallback extends ValidRequestExpectationCallback {
+public class ValidResourceScopedAccessRequestCallback extends ValidRequestExpectationCallback {
     @SuppressWarnings("RedundantIfStatement")
     @Override
     protected boolean isValid(HashMap<String, String> params) {
-        if (!params.get("grant_type").equals("urn:scalepoint:params:oauth:grant-type:delegate-access")) return false;
-        if (!params.get("scope").equals("scope1 scope2")) return false;
+        if (!params.get("grant_type").equals("urn:scalepoint:params:oauth:grant-type:resource-scoped-access")) return false;
+        if (!params.get("scope").equals("scope")) return false;
         if (!params.get("client_assertion_type").equals("urn:ietf:params:oauth:client-assertion-type:jwt-bearer"))
             return false;
 
@@ -17,7 +17,8 @@ public class ValidDelegationRequestCallback extends ValidRequestExpectationCallb
         Jwts.parser().setSigningKey(keyPair.getPrivateKey()).parseClaimsJws(params.get("client_assertion"));
 
         if (!params.get("resource").equals("resource")) return false;
-        if (!params.get("amr").equals("amr")) return false;
+        if (!params.get("amr").equals("pwd otp mfa")) return false;
+        if (!params.get("tenantId").equals("tenantId")) return false;
 
         return true;
     }

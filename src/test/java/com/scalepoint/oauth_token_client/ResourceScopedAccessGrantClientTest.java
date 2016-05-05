@@ -8,7 +8,7 @@ import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 
 @SuppressWarnings("unused")
-public class DelegateAccessGrantTest extends MockServerTestBase {
+public class ResourceScopedAccessGrantClientTest extends MockServerTestBase {
 
     @Test
     public void testSuccess() throws Exception {
@@ -22,17 +22,15 @@ public class DelegateAccessGrantTest extends MockServerTestBase {
         )
                 .callback(HttpCallback.callback().withCallbackClass(SuccessfulExpectationCallback.class.getName()));
 
-        TokenClient tokenClient = new DelegateAccessGrantTokenClient(
+        ResourceScopedAccessGrantTokenClient tokenClient = new ResourceScopedAccessGrantTokenClient(
                 tokenEndpointUri,
                 new JwtBearerClientAssertionCredentials(
                         tokenEndpointUri,
                         "clientid",
                         TestCertificateHelper.load()
-                ),
-                "resource",
-                "amr"
+                )
         );
-        tokenClient.getToken("success");
+        tokenClient.getToken(new ResourceScopedAccessGrantParameters("scope", "resource"));
     }
 
     @Test
@@ -45,19 +43,17 @@ public class DelegateAccessGrantTest extends MockServerTestBase {
                         .withPath("/oauth2/token"),
                 exactly(1)
         )
-                .callback(HttpCallback.callback().withCallbackClass(ValidDelegationRequestCallback.class.getName()));
+                .callback(HttpCallback.callback().withCallbackClass(ValidResourceScopedAccessRequestCallback.class.getName()));
 
-        TokenClient tokenClient = new DelegateAccessGrantTokenClient(
+        ResourceScopedAccessGrantTokenClient tokenClient = new ResourceScopedAccessGrantTokenClient(
                 tokenEndpointUri,
                 new JwtBearerClientAssertionCredentials(
                         tokenEndpointUri,
                         "clientid",
                         TestCertificateHelper.load()
-                ),
-                "resource",
-                "amr"
+                )
         );
-        tokenClient.getToken("scope1", "scope2");
+        tokenClient.getToken(new ResourceScopedAccessGrantParameters("scope", "resource", "tenantId", new String[] {"pwd", "otp", "mfa"}));
     }
 
     @Test(expectedExceptions = HttpResponseException.class)
@@ -72,17 +68,15 @@ public class DelegateAccessGrantTest extends MockServerTestBase {
         )
                 .callback(HttpCallback.callback().withCallbackClass(BadRequestCallback.class.getName()));
 
-        TokenClient tokenClient = new DelegateAccessGrantTokenClient(
+        ResourceScopedAccessGrantTokenClient tokenClient = new ResourceScopedAccessGrantTokenClient(
                 tokenEndpointUri,
                 new JwtBearerClientAssertionCredentials(
                         tokenEndpointUri,
                         "clientid",
                         TestCertificateHelper.load()
-                ),
-                "resource",
-                "amr"
+                )
         );
-        tokenClient.getToken("badRequest");
+        tokenClient.getToken(new ResourceScopedAccessGrantParameters("scope", "resource"));
     }
 
     @Test
@@ -97,17 +91,15 @@ public class DelegateAccessGrantTest extends MockServerTestBase {
         )
                 .callback(HttpCallback.callback().withCallbackClass(SuccessfulExpectationCallback.class.getName()));
 
-        TokenClient tokenClient = new DelegateAccessGrantTokenClient(
+        ResourceScopedAccessGrantTokenClient tokenClient = new ResourceScopedAccessGrantTokenClient(
                 tokenEndpointUri,
                 new JwtBearerClientAssertionCredentials(
                         tokenEndpointUri,
                         "clientid",
                         TestCertificateHelper.load()
-                ),
-                "resource",
-                "amr"
+                )
         );
-        tokenClient.getToken();
+        tokenClient.getToken(new ResourceScopedAccessGrantParameters("scope", "resource"));
     }
 
 }
