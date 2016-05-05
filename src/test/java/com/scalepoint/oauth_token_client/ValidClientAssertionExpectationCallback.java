@@ -13,7 +13,7 @@ public class ValidClientAssertionExpectationCallback extends ValidRequestExpecta
         if (!params.get("client_assertion_type").equals("urn:ietf:params:oauth:client-assertion-type:jwt-bearer"))
             return false;
 
-        RSACertificateWithPrivateKey keyPair = TestCertificateHelper.load();
+        CertificateWithPrivateKey keyPair = TestCertificateHelper.load();
         Jwts.parser().setSigningKey(keyPair.getPrivateKey()).parseClaimsJws(params.get("client_assertion"));
 
         return true;

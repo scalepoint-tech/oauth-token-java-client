@@ -13,7 +13,7 @@ import java.util.Properties;
 
 class TestCertificateHelper {
 
-    public static RSACertificateWithPrivateKey load() {
+    public static CertificateWithPrivateKey load() {
         try {
             Properties config = new Properties();
             config.load(new FileInputStream("config.properties"));
@@ -23,12 +23,12 @@ class TestCertificateHelper {
         }
     }
 
-    private static RSACertificateWithPrivateKey getKeyPair(String keyStoreFileName, String keyStorePassword) throws KeyStoreException, IOException, UnrecoverableKeyException, NoSuchAlgorithmException, CertificateException {
+    private static CertificateWithPrivateKey getKeyPair(String keyStoreFileName, String keyStorePassword) throws KeyStoreException, IOException, UnrecoverableKeyException, NoSuchAlgorithmException, CertificateException {
         KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType()); // or KeyStore.getInstance("pkcs12", "SunJSSE") to load .pfx
         keyStore.load(new FileInputStream(keyStoreFileName), null);
         String a = keyStore.aliases().nextElement();
         RSAPrivateKey privateKey = (RSAPrivateKey) keyStore.getKey(a, keyStorePassword.toCharArray());
         X509Certificate certificate = (X509Certificate) keyStore.getCertificate(a);
-        return new RSACertificateWithPrivateKey(privateKey, certificate);
+        return new CertificateWithPrivateKey(privateKey, certificate);
     }
 }

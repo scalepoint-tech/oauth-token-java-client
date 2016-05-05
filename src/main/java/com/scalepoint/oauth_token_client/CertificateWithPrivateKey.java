@@ -1,14 +1,15 @@
 package com.scalepoint.oauth_token_client;
 
+import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
-import java.security.interfaces.RSAPrivateKey;
 
 /**
  * Container for RSA private key and its matching X509 certificate
  */
-public class RSACertificateWithPrivateKey {
+@SuppressWarnings("WeakerAccess")
+public class CertificateWithPrivateKey {
     private X509Certificate certificate;
-    private RSAPrivateKey privateKey;
+    private PrivateKey privateKey;
 
     /**
      * Create new container for private key and certificate
@@ -16,7 +17,7 @@ public class RSACertificateWithPrivateKey {
      * @param privateKey  Private key
      * @param certificate X509 certificate
      */
-    public RSACertificateWithPrivateKey(RSAPrivateKey privateKey, X509Certificate certificate) {
+    public CertificateWithPrivateKey(PrivateKey privateKey, X509Certificate certificate) {
 
         if (!CertificateUtil.checkIfMatch(privateKey, certificate)) {
             throw new IllegalArgumentException("Certificate does not match private key");
@@ -36,7 +37,7 @@ public class RSACertificateWithPrivateKey {
     /**
      * @return Private key
      */
-    public RSAPrivateKey getPrivateKey() {
+    public PrivateKey getPrivateKey() {
         return privateKey;
     }
 }

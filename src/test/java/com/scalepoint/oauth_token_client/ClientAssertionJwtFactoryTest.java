@@ -20,7 +20,7 @@ public class ClientAssertionJwtFactoryTest {
 
     @BeforeClass
     public void init() {
-        RSACertificateWithPrivateKey keyPair = TestCertificateHelper.load();
+        CertificateWithPrivateKey keyPair = TestCertificateHelper.load();
         thumbprint = CertificateUtil.getThumbprint(keyPair.getCertificate());
         ClientAssertionJwtFactory factory = new ClientAssertionJwtFactory(TOKEN_ENDPOINT_URI, CLIENT_ID, keyPair);
         String tokenString = factory.CreateAssertionToken();

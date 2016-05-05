@@ -5,6 +5,7 @@ import io.jsonwebtoken.impl.Base64UrlCodec;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
@@ -12,7 +13,7 @@ import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 
 final class CertificateUtil {
-    public static String getThumbprint(Certificate certificate) {
+    static String getThumbprint(Certificate certificate) {
         byte[] der;
         try {
             der = certificate.getEncoded();
@@ -32,14 +33,16 @@ final class CertificateUtil {
         return new Base64UrlCodec().encode(digest);
     }
 
-    public static Boolean checkIfMatch(RSAPrivateKey privateKey, X509Certificate certificate) {
+    static Boolean checkIfMatch(PrivateKey privateKey, X509Certificate certificate) {
+        // Currently, only RSA validation is supported
+        RSAPrivateKey rsaPrivateKey = (RSAPrivateKey) privateKey;
         RSAPublicKey rsaPublicKey = (RSAPublicKey) certificate.getPublicKey();
 
-        return rsaPublicKey.getModulus().equals(privateKey.getModulus())
+        return rsaPublicKey.getModulus().equals(rsaPrivateKey.getModulus())
                 && BigInteger.valueOf(2)
                 .modPow(
                         rsaPublicKey.getPublicExponent()
-                                .multiply(privateKey.getPrivateExponent())
+                                .multiply(rsaPrivateKey.getPrivateExponent())
                                 .subtract(BigInteger.ONE),
                         rsaPublicKey.getModulus())
                 .equals(BigInteger.ONE);

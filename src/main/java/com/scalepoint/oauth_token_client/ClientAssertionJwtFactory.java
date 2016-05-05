@@ -14,7 +14,7 @@ class ClientAssertionJwtFactory {
     private final Key key;
     private final String thumbprint;
 
-    public ClientAssertionJwtFactory(String tokenEndpointUri, String clientId, RSACertificateWithPrivateKey keyPair) {
+    public ClientAssertionJwtFactory(String tokenEndpointUri, String clientId, CertificateWithPrivateKey keyPair) {
         this.tokenEndpointUri = tokenEndpointUri;
         this.clientId = clientId;
         this.thumbprint = CertificateUtil.getThumbprint(keyPair.getCertificate());
