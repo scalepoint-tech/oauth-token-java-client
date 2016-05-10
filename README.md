@@ -29,7 +29,7 @@ Obtaining access token from token endpoint is as simple as this:
 ###### private_key_jwt ######
 
 ```java
-TokenClient tokenClient = new ClientCredentialsGrantTokenClient(
+ClientCredentialsGrantTokenClient tokenClient = new ClientCredentialsGrantTokenClient(
                                 tokenEndpointUri,
                                 new JwtBearerClientAssertionCredentials(
                                     tokenEndpointUri,
@@ -40,12 +40,12 @@ TokenClient tokenClient = new ClientCredentialsGrantTokenClient(
 String accessToken = tokenClient.getToken("scope1", "scope2");
 ```
 
-_Check [here](src/test/java/com/scalepoint/jwt_assertion_client/TestCertificateHelper.java) for how you can load "keyPair" from .jks or .pfx file containing only one certificate and key for test purposes._
+_Check [here](src/test/java/com/scalepoint/oauth_token_client/TestCertificateHelper.java) for how you can load "keyPair" from .jks or .pfx file containing only one certificate and key for test purposes._
 
 ###### client_secret ######
 
 ```java
-TokenClient tokenClient = new ClientCredentialsGrantTokenClient(
+ClientCredentialsGrantTokenClient tokenClient = new ClientCredentialsGrantTokenClient(
                                 tokenEndpointUri,
                                 new ClientSecretCredentials(clientId, clientSecret)
                           );
