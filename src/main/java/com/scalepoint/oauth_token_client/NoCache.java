@@ -3,7 +3,7 @@ package com.scalepoint.oauth_token_client;
 import java.io.IOException;
 
 /**
- * Simple in-memory token cache implementation
+ * No-cache token cache implementation
  */
 @SuppressWarnings("unused")
 public class NoCache implements TokenCache {

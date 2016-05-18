@@ -15,7 +15,7 @@ public class ResourceScopedAccessGrantParameters {
     /**
      * Creates new ResourceScopedAccessGrantParameters
      * @param scope OAuth2 scope
-     * @param resource Spefific resource identifier
+     * @param resource Specific resource identifier
      */
     public ResourceScopedAccessGrantParameters(String scope, String resource) {
         this.scope = scope;
