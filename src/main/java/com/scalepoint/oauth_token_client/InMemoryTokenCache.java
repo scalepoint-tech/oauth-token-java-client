@@ -2,8 +2,6 @@ package com.scalepoint.oauth_token_client;
 
 import net.jodah.expiringmap.ExpirationPolicy;
 import net.jodah.expiringmap.ExpiringMap;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -13,7 +11,6 @@ import java.util.concurrent.locks.ReentrantLock;
  * Simple in-memory token cache implementation
  */
 public class InMemoryTokenCache implements TokenCache {
-    private final Log log = LogFactory.getLog(InMemoryTokenCache.class);
     private final ExpiringMap<String, String> cacheMap;
     private final ReentrantLock lock = new ReentrantLock();
 
@@ -46,7 +43,7 @@ public class InMemoryTokenCache implements TokenCache {
                     if (token.getExpiresInSeconds() > 0) {
                         cacheMap.put(cacheKey, value, ExpirationPolicy.CREATED, token.getExpiresInSeconds(), TimeUnit.SECONDS);
                     } else {
-                        log.warn("Authorization server does not provide token expiration information. Consider using NoCache or custom cache implementation to avoid performance penalty caused by locking.");
+                        throw new IOException("Authorization server does not provide token expiration information. Consider using NoCache or custom cache implementation to avoid performance penalty caused by locking.");
                     }
                 }
             } finally {
