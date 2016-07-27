@@ -1,7 +1,5 @@
 package com.scalepoint.oauth_token_client;
 
-import org.apache.commons.codec.digest.DigestUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +22,7 @@ public class ClientSecretCredentials implements ClientCredentials {
     public ClientSecretCredentials(String clientId, String clientSecret) {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
-        this.credentialThumbprint = DigestUtils.sha1Hex(clientId + clientSecret);
+        this.credentialThumbprint = DigestUtil.sha1Hex(clientId + clientSecret);
     }
 
     @Override

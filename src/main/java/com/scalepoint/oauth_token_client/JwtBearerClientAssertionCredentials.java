@@ -1,7 +1,5 @@
 package com.scalepoint.oauth_token_client;
 
-import org.apache.commons.codec.digest.DigestUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +24,7 @@ public class JwtBearerClientAssertionCredentials implements ClientCredentials {
     @SuppressWarnings("SameParameterValue")
     public JwtBearerClientAssertionCredentials(String tokenEndpointUri, String clientId, CertificateWithPrivateKey keyPair) {
         this.assertionFactory = new ClientAssertionJwtFactory(tokenEndpointUri, clientId, keyPair);
-        this.credentialThumbprint = DigestUtils.sha1Hex(
+        this.credentialThumbprint = DigestUtil.sha1Hex(
                 tokenEndpointUri
                         + clientId
                         + CertificateUtil.getThumbprint(keyPair.getCertificate()));
