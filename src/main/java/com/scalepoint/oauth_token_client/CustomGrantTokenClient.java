@@ -1,9 +1,9 @@
 package com.scalepoint.oauth_token_client;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.client.fluent.Form;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("WeakerAccess")
@@ -41,23 +41,18 @@ public abstract class CustomGrantTokenClient {
             @Override
             public ExpiringToken get() throws IOException {
 
-                Form form = Form.form();
+                List<NameValuePair> form = new ArrayList<NameValuePair>();
 
-                form.add("grant_type", getGrantType());
+                form.add(new NameValuePair("grant_type", getGrantType()));
 
-                for (NameValuePair pair : clientCredentials.getPostParams()) {
-                    form.add(pair.getName(), pair.getValue());
-                }
-
-                for (NameValuePair pair : parameters) {
-                    form.add(pair.getName(), pair.getValue());
-                }
+                form.addAll(clientCredentials.getPostParams());
+                form.addAll(parameters);
 
                 if (scopeString != null) {
-                    form.add("scope", scopeString);
+                    form.add(new NameValuePair("scope", scopeString));
                 }
 
-                return tokenEndpointHttpClient.getToken(form.build());
+                return tokenEndpointHttpClient.getToken(form);
             }
         });
     }

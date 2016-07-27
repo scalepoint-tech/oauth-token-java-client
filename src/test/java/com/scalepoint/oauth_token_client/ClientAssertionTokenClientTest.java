@@ -1,10 +1,11 @@
 package com.scalepoint.oauth_token_client;
 
-import org.apache.http.client.HttpResponseException;
 import org.mockserver.model.HttpCallback;
 import org.mockserver.model.HttpRequest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.io.IOException;
 
 import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
@@ -84,7 +85,7 @@ public class ClientAssertionTokenClientTest extends MockServerTestBase {
         tokenClient.getToken("scope1", "scope2");
     }
 
-    @Test(expectedExceptions = HttpResponseException.class)
+    @Test(expectedExceptions = IOException.class)
     public void testFailure() throws Exception {
 
         mockServer.when(

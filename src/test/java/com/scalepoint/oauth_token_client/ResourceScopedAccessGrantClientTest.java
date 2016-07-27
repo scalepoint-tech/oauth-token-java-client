@@ -1,8 +1,9 @@
 package com.scalepoint.oauth_token_client;
 
-import org.apache.http.client.HttpResponseException;
 import org.mockserver.model.HttpCallback;
 import org.testng.annotations.Test;
+
+import java.io.IOException;
 
 import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
@@ -56,7 +57,7 @@ public class ResourceScopedAccessGrantClientTest extends MockServerTestBase {
         tokenClient.getToken(new ResourceScopedAccessGrantParameters("scope", "resource", "tenantId", new String[] {"pwd", "otp", "mfa"}));
     }
 
-    @Test(expectedExceptions = HttpResponseException.class)
+    @Test(expectedExceptions = IOException.class)
     public void testFailure() throws Exception {
 
         mockServer.when(
