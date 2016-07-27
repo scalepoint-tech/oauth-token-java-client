@@ -1,7 +1,5 @@
 package com.scalepoint.oauth_token_client;
 
-import org.apache.commons.lang3.StringUtils;
-
 /**
  * OAuth2 Token endpoint parameters for urn:scalepoint:params:oauth:grant-type:resource-scoped-access grant.
  */
@@ -68,6 +66,6 @@ public class ResourceScopedAccessGrantParameters {
     protected String getAmrString() {
         return (amr == null || amr.length < 1)
                 ? null
-                : StringUtils.join(amr, " ");
+                : StringUtil.join(amr, " ");
     }
 }

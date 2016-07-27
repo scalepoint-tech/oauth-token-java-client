@@ -1,7 +1,5 @@
 package com.scalepoint.oauth_token_client;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +14,7 @@ public abstract class CustomGrantTokenClient {
     public CustomGrantTokenClient(String tokenEndpointUri, ClientCredentials clientCredentials, TokenCache cache) {
         this.tokenEndpointHttpClient = new TokenEndpointHttpClient(tokenEndpointUri);
         this.clientCredentials = clientCredentials;
-        this.partialCacheKey = StringUtils.join(new String[]{tokenEndpointUri, clientCredentials.getCredentialThumbprint()}, ':');
+        this.partialCacheKey = StringUtil.join(new String[]{tokenEndpointUri, clientCredentials.getCredentialThumbprint()}, ":");
         this.cache = cache;
     }
 
@@ -33,9 +31,9 @@ public abstract class CustomGrantTokenClient {
         final String scopeString =
                 (scopes == null || scopes.length < 1)
                         ? null
-                        : StringUtils.join(scopes, " ");
+                        : StringUtil.join(scopes, " ");
 
-        final String cacheKey = StringUtils.join(new String[]{partialCacheKey, getGrantType(), scopeString, String.valueOf(parameters.hashCode())}, ':');
+        final String cacheKey = StringUtil.join(new String[]{partialCacheKey, getGrantType(), scopeString, String.valueOf(parameters.hashCode())}, ":");
 
         return cache.get(cacheKey, new TokenSource() {
             @Override
