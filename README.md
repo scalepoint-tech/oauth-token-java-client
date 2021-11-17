@@ -16,6 +16,7 @@ _If you need support for other grant types or authentication methods, please che
 
 ## Getting started ##
 Install with Maven:
+
 ```xml
 <dependency>
     <groupId>com.scalepoint</groupId>
@@ -51,4 +52,17 @@ ClientCredentialsGrantTokenClient tokenClient = new ClientCredentialsGrantTokenC
                           );
 
 String accessToken = tokenClient.getToken("scope1", "scope2");
+```
+
+### Using Proxies ###
+
+The token client respects the proxy settings in the system properties, e.g. `http.proxyHost` or `http.proxyPort`.
+
+However in some cases the OAuth server needs to be accessed through a different proxy than the resource server.
+In these cases the OAuth server's proxy can be set like this:
+
+```java
+String proxyHost = "proxy.example.com"; // ip address works as well
+int    proxyPort = 8080;
+tokenClient.setProxy(proxyHost, proxyPort);
 ```
