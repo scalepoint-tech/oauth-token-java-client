@@ -5,7 +5,7 @@ import java.io.IOException;
 /**
  * Represents function returning token
  */
-interface TokenSource {
+public interface TokenSource {
     /**
      * @return Token
      * @throws IOException
