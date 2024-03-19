@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.List;
@@ -14,6 +16,8 @@ class TokenEndpointHttpClient {
     private final static ObjectMapper MAPPER = new ObjectMapper();
 
     private final String tokenEndpointUri;
+
+    private Proxy proxy;
 
     public TokenEndpointHttpClient(String tokenEndpointUri) {
         this.tokenEndpointUri = tokenEndpointUri;
@@ -27,6 +31,10 @@ class TokenEndpointHttpClient {
         return parseResponse(tokenResponse);
     }
 
+    void setProxy(final String host, final int port) {
+        proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(host, port));
+    }
+
     private String formatRequest(List<NameValuePair> params) throws UnsupportedEncodingException {
         String body = "";
         for (NameValuePair p: params) {
@@ -38,7 +46,13 @@ class TokenEndpointHttpClient {
 
     private HttpURLConnection makeRequest(String body) throws IOException {
         URL u = new URL(tokenEndpointUri);
-        HttpURLConnection c = (HttpURLConnection)u.openConnection();
+        HttpURLConnection c;
+        if (proxy != null) {
+            c = (HttpURLConnection)u.openConnection(proxy);
+        }
+        else {
+            c = (HttpURLConnection)u.openConnection();
+        }
         c.setRequestMethod("POST");
         c.setInstanceFollowRedirects(false);
         c.setDoInput(true);

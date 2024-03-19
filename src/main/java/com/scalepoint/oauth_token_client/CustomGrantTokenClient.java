@@ -19,6 +19,16 @@ public abstract class CustomGrantTokenClient {
     }
 
     /**
+     * Sets the proxy to be used for token requests.
+     *
+     * @param host Host name or IP address of the proxy
+     * @param port TCP port of the proxy
+     */
+    public void setProxy(final String host, final int port) {
+        tokenEndpointHttpClient.setProxy(host, port);
+    }
+
+    /**
      * Retrieve access token for the configured "client_id" and specified scopes. Request to the server is only performed if matching valid token is not in the cache
      *
      * @param parameters Grant-specific parameters
