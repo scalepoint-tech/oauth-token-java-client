@@ -1,6 +1,6 @@
 package com.scalepoint.oauth_token_client;
 
-import org.mockserver.model.HttpCallback;
+import org.mockserver.model.HttpClassCallback;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
@@ -8,7 +8,6 @@ import java.io.IOException;
 import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 
-@SuppressWarnings("unused")
 public class ResourceScopedAccessGrantClientTest extends MockServerTestBase {
 
     @Test
@@ -21,7 +20,7 @@ public class ResourceScopedAccessGrantClientTest extends MockServerTestBase {
                         .withPath("/oauth2/token"),
                 exactly(1)
         )
-                .callback(HttpCallback.callback().withCallbackClass(SuccessfulExpectationCallback.class.getName()));
+                .respond(HttpClassCallback.callback().withCallbackClass(SuccessfulExpectationCallback.class.getName()));
 
         ResourceScopedAccessGrantTokenClient tokenClient = new ResourceScopedAccessGrantTokenClient(
                 tokenEndpointUri,
@@ -44,7 +43,7 @@ public class ResourceScopedAccessGrantClientTest extends MockServerTestBase {
                         .withPath("/oauth2/token"),
                 exactly(1)
         )
-                .callback(HttpCallback.callback().withCallbackClass(ValidResourceScopedAccessRequestCallback.class.getName()));
+                .respond(HttpClassCallback.callback().withCallbackClass(ValidResourceScopedAccessRequestCallback.class.getName()));
 
         ResourceScopedAccessGrantTokenClient tokenClient = new ResourceScopedAccessGrantTokenClient(
                 tokenEndpointUri,
@@ -67,7 +66,7 @@ public class ResourceScopedAccessGrantClientTest extends MockServerTestBase {
                         .withPath("/oauth2/token"),
                 exactly(1)
         )
-                .callback(HttpCallback.callback().withCallbackClass(BadRequestCallback.class.getName()));
+                .respond(HttpClassCallback.callback().withCallbackClass(BadRequestCallback.class.getName()));
 
         ResourceScopedAccessGrantTokenClient tokenClient = new ResourceScopedAccessGrantTokenClient(
                 tokenEndpointUri,
@@ -90,7 +89,7 @@ public class ResourceScopedAccessGrantClientTest extends MockServerTestBase {
                         .withPath("/oauth2/token"),
                 exactly(1)
         )
-                .callback(HttpCallback.callback().withCallbackClass(SuccessfulExpectationCallback.class.getName()));
+                .respond(HttpClassCallback.callback().withCallbackClass(SuccessfulExpectationCallback.class.getName()));
 
         ResourceScopedAccessGrantTokenClient tokenClient = new ResourceScopedAccessGrantTokenClient(
                 tokenEndpointUri,

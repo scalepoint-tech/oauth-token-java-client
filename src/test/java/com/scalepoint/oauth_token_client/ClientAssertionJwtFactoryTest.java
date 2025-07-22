@@ -10,7 +10,6 @@ import org.testng.annotations.Test;
 /**
  * Validate that assertion token is generated according to the specification
  */
-@SuppressWarnings("unused")
 public class ClientAssertionJwtFactoryTest {
 
     private final static String TOKEN_ENDPOINT_URI = "https://foobar";
@@ -24,7 +23,8 @@ public class ClientAssertionJwtFactoryTest {
         thumbprint = CertificateUtil.getThumbprint(keyPair.getCertificate());
         ClientAssertionJwtFactory factory = new ClientAssertionJwtFactory(TOKEN_ENDPOINT_URI, CLIENT_ID, keyPair);
         String tokenString = factory.CreateAssertionToken();
-        token = Jwts.parser().setSigningKey(keyPair.getPrivateKey()).parseClaimsJws(tokenString);
+        // Use the PUBLIC key from the certificate to verify the JWT signature, not the private key
+        token = Jwts.parser().verifyWith(keyPair.getCertificate().getPublicKey()).build().parseSignedClaims(tokenString);
     }
 
     @Test
@@ -44,31 +44,32 @@ public class ClientAssertionJwtFactoryTest {
 
     @Test
     public void testContainsValidIssuer() {
-        Assert.assertEquals(token.getBody().getIssuer(), CLIENT_ID);
+        Assert.assertEquals(token.getPayload().getIssuer(), CLIENT_ID);
     }
 
     @Test
     public void testContainsValidSubject() {
-        Assert.assertEquals(token.getBody().getSubject(), CLIENT_ID);
+        Assert.assertEquals(token.getPayload().getSubject(), CLIENT_ID);
     }
 
     @Test
     public void testContainsValidAudience() {
-        Assert.assertEquals(token.getBody().getAudience(), TOKEN_ENDPOINT_URI);
+        // In newer JJWT versions, audience is returned as a Set<String>
+        Assert.assertTrue(token.getPayload().getAudience().contains(TOKEN_ENDPOINT_URI));
     }
 
     @Test
     public void testContainsJwtId() {
-        Assert.assertNotNull(token.getBody().getId());
+        Assert.assertNotNull(token.getPayload().getId());
     }
 
     @Test
     public void testContainsExpiration() {
-        Assert.assertNotNull(token.getBody().getExpiration());
+        Assert.assertNotNull(token.getPayload().getExpiration());
     }
 
     @Test
     public void testContainsIssuedAt() {
-        Assert.assertNotNull(token.getBody().getIssuedAt());
+        Assert.assertNotNull(token.getPayload().getIssuedAt());
     }
 }
