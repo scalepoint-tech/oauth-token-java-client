@@ -1,0 +1,130 @@
+name: Build and Publish
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: maven
+          server-id: ${{ github.event_name == 'release' && 'central' || 'github' }}
+          server-username: ${{ github.event_name == 'release' && 'CENTRAL_USERNAME' || 'GITHUB_ACTOR' }}
+          server-password: ${{ github.event_name == 'release' && 'CENTRAL_TOKEN' || 'GITHUB_TOKEN' }}
+          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+
+      - name: Read version from pom.xml
+        id: get-version
+        run: |
+          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          echo "pom_version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Validate pom.xml version has -SNAPSHOT suffix
+        run: |
+          POM_VERSION=${{ steps.get-version.outputs.pom_version }}
+          echo "POM version: $POM_VERSION"
+          if [[ "$POM_VERSION" != *"-SNAPSHOT" ]]; then
+            echo "::error::pom.xml version must end with -SNAPSHOT, but is '$POM_VERSION'"
+            exit 1
+          fi
+
+      - name: Validate release tag matches POM version
+        if: github.event_name == 'release'
+        run: |
+          TAG_VERSION=${GITHUB_REF#refs/tags/v}
+          POM_VERSION=${{ steps.get-version.outputs.pom_version }}
+          EXPECTED_TAG="${POM_VERSION%-SNAPSHOT}"
+          echo "GitHub tag: $TAG_VERSION"
+          echo "Expected from POM: $EXPECTED_TAG"
+          if [ "$TAG_VERSION" != "$EXPECTED_TAG" ]; then
+            echo "::error::Tag v$TAG_VERSION does not match pom.xml version $POM_VERSION without -SNAPSHOT suffix"
+            exit 1
+          fi
+
+      - name: Build and test
+        run: mvn --batch-mode verify
+        env:
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+
+      - name: Publish Test Results
+        uses: dorny/test-reporter@dc3a92680fcc15842eef52e8c4606ea7ce6bd3f3 # v2.1.1
+        if: success() || failure()
+        with:
+          name: Test Results
+          path: target/surefire-reports/*.xml
+          reporter: java-junit
+          fail-on-error: false
+
+      - name: Publish to GitHub Packages
+        if: github.event_name == 'push'
+        run: mvn --batch-mode deploy -DskipTests -DaltDeploymentRepository=github::https://maven.pkg.github.com/${{ github.repository }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set release version for Maven Central
+        if: github.event_name == 'release'
+        run: |
+          POM_VERSION=${{ steps.get-version.outputs.pom_version }}
+          RELEASE_VERSION="${POM_VERSION%-SNAPSHOT}"
+          mvn versions:set -DnewVersion="$RELEASE_VERSION" -DgenerateBackupPoms=false
+
+      - name: Update release with Maven Central links
+        if: github.event_name == 'release'
+        run: |
+          RELEASE_VERSION="${{ steps.get-version.outputs.pom_version }}"
+          RELEASE_VERSION="${RELEASE_VERSION%-SNAPSHOT}"
+          
+          # Get existing release body first
+          EXISTING_BODY=$(gh release view ${{ github.event.release.tag_name }} --json body -q .body)
+          
+          # Start with existing body if it exists
+          if [ -n "$EXISTING_BODY" ] && [ "$EXISTING_BODY" != "null" ]; then
+            echo "$EXISTING_BODY" > release_body.md
+            echo "" >> release_body.md
+            echo "---" >> release_body.md
+            echo "" >> release_body.md
+          fi
+          
+          # Append Maven Central links
+          cat << EOF >> release_body.md
+          ## 📦 Maven Central
+
+          This release is available at https://central.sonatype.com/artifact/com.scalepoint/oauth-token-client/${RELEASE_VERSION}
+
+          \`\`\`xml
+          <dependency>
+              <groupId>com.scalepoint</groupId>
+              <artifactId>oauth-token-client</artifactId>
+              <version>${RELEASE_VERSION}</version>
+          </dependency>
+          \`\`\`
+          EOF
+          
+          # Update the release
+          gh release edit ${{ github.event.release.tag_name }} --notes-file release_body.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish to Maven Central
+        if: github.event_name == 'release'
+        run: mvn --batch-mode deploy -DskipTests
+        env:
+          CENTRAL_USERNAME: ${{ secrets.CENTRAL_USERNAME }}
+          CENTRAL_PASSWORD: ${{ secrets.CENTRAL_PASSWORD }}
