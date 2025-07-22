@@ -32,7 +32,7 @@ public class JwtBearerClientAssertionCredentials implements ClientCredentials {
 
     @Override
     public List<NameValuePair> getPostParams() {
-        String assertionToken = assertionFactory.CreateAssertionToken();
+        String assertionToken = assertionFactory.createAssertionToken();
         ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new NameValuePair("client_assertion_type", "urn:ietf:params:oauth:client-assertion-type:jwt-bearer"));
         params.add(new NameValuePair("client_assertion", assertionToken));
