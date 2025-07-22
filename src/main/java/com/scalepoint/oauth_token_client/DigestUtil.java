@@ -1,24 +1,18 @@
 package com.scalepoint.oauth_token_client;
 
-import javax.xml.bind.DatatypeConverter;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.HexFormat;
 
 class DigestUtil {
     static String sha1Hex(String data) {
-        MessageDigest digest = null;
         try {
-            digest = MessageDigest.getInstance("SHA-1");
+            MessageDigest digest = MessageDigest.getInstance("SHA-1");
+            byte[] digestBytes = digest.digest(data.getBytes(StandardCharsets.UTF_8));
+            return HexFormat.of().formatHex(digestBytes);
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
-        try {
-            digest.update(data.getBytes("utf8"));
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
-        byte[] digestBytes = digest.digest();
-        return DatatypeConverter.printHexBinary(digestBytes);
     }
 }

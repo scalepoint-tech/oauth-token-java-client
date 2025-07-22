@@ -5,7 +5,6 @@ import io.jsonwebtoken.Jwts;
 import java.util.HashMap;
 
 public class ValidResourceScopedAccessRequestCallback extends ValidRequestExpectationCallback {
-    @SuppressWarnings("RedundantIfStatement")
     @Override
     protected boolean isValid(HashMap<String, String> params) {
         if (!params.get("grant_type").equals("urn:scalepoint:params:oauth:grant-type:resource-scoped-access")) return false;
@@ -14,7 +13,7 @@ public class ValidResourceScopedAccessRequestCallback extends ValidRequestExpect
             return false;
 
         CertificateWithPrivateKey keyPair = TestCertificateHelper.load();
-        Jwts.parser().setSigningKey(keyPair.getPrivateKey()).parseClaimsJws(params.get("client_assertion"));
+        Jwts.parser().verifyWith(keyPair.getCertificate().getPublicKey()).build().parseSignedClaims(params.get("client_assertion"));
 
         if (!params.get("resource").equals("resource")) return false;
         if (!params.get("amr").equals("pwd otp mfa")) return false;

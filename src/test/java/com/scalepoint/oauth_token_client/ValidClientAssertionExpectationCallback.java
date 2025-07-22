@@ -14,7 +14,7 @@ public class ValidClientAssertionExpectationCallback extends ValidRequestExpecta
             return false;
 
         CertificateWithPrivateKey keyPair = TestCertificateHelper.load();
-        Jwts.parser().setSigningKey(keyPair.getPrivateKey()).parseClaimsJws(params.get("client_assertion"));
+        Jwts.parser().verifyWith(keyPair.getCertificate().getPublicKey()).build().parseSignedClaims(params.get("client_assertion"));
 
         return true;
     }

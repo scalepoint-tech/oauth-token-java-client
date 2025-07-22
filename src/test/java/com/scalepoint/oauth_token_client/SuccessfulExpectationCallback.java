@@ -1,12 +1,11 @@
 package com.scalepoint.oauth_token_client;
 
-import org.mockserver.mock.action.ExpectationCallback;
+import org.mockserver.mock.action.ExpectationResponseCallback;
 import org.mockserver.model.Header;
 import org.mockserver.model.HttpRequest;
 import org.mockserver.model.HttpResponse;
 
-@SuppressWarnings("WeakerAccess")
-public class SuccessfulExpectationCallback implements ExpectationCallback {
+public class SuccessfulExpectationCallback implements ExpectationResponseCallback {
     @Override
     public HttpResponse handle(HttpRequest httpRequest) {
         return new HttpResponse()

@@ -1,7 +1,5 @@
 package com.scalepoint.oauth_token_client;
 
-import io.jsonwebtoken.impl.Base64UrlCodec;
-
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -30,7 +28,7 @@ final class CertificateUtil {
 
         md.update(der);
         byte[] digest = md.digest();
-        return new Base64UrlCodec().encode(digest);
+        return java.util.Base64.getUrlEncoder().withoutPadding().encodeToString(digest);
     }
 
     static Boolean checkIfMatch(PrivateKey privateKey, X509Certificate certificate) {

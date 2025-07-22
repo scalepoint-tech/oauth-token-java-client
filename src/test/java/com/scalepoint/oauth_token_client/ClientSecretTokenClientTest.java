@@ -1,6 +1,6 @@
 package com.scalepoint.oauth_token_client;
 
-import org.mockserver.model.HttpCallback;
+import org.mockserver.model.HttpClassCallback;
 import org.mockserver.model.HttpRequest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -10,7 +10,6 @@ import java.io.IOException;
 import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 
-@SuppressWarnings("unused")
 public class ClientSecretTokenClientTest extends MockServerTestBase {
 
     @Test
@@ -23,7 +22,7 @@ public class ClientSecretTokenClientTest extends MockServerTestBase {
                         .withPath("/oauth2/token"),
                 exactly(1)
         )
-                .callback(HttpCallback.callback().withCallbackClass(SuccessfulExpectationCallback.class.getName()));
+                .respond(HttpClassCallback.callback().withCallbackClass(SuccessfulExpectationCallback.class.getName()));
 
         ClientCredentialsGrantTokenClient tokenClient = new ClientCredentialsGrantTokenClient(tokenEndpointUri, new ClientSecretCredentials("clientid", "password"));
         tokenClient.getToken("success");
@@ -40,7 +39,7 @@ public class ClientSecretTokenClientTest extends MockServerTestBase {
                 request,
                 exactly(1)
         )
-                .callback(HttpCallback.callback().withCallbackClass(SuccessfulExpectationCallback.class.getName()));
+                .respond(HttpClassCallback.callback().withCallbackClass(SuccessfulExpectationCallback.class.getName()));
 
         ClientCredentialsGrantTokenClient tokenClient = new ClientCredentialsGrantTokenClient(tokenEndpointUri, new ClientSecretCredentials("clientid", "password"));
         tokenClient.getToken("cache");
@@ -58,7 +57,7 @@ public class ClientSecretTokenClientTest extends MockServerTestBase {
                         .withPath("/oauth2/token"),
                 exactly(1)
         )
-                .callback(HttpCallback.callback().withCallbackClass(ValidClientSecretExpectationCallback.class.getName()));
+                .respond(HttpClassCallback.callback().withCallbackClass(ValidClientSecretExpectationCallback.class.getName()));
 
         ClientCredentialsGrantTokenClient tokenClient = new ClientCredentialsGrantTokenClient(tokenEndpointUri, new ClientSecretCredentials("clientid", "password"));
         tokenClient.getToken("scope1", "scope2");
@@ -74,7 +73,7 @@ public class ClientSecretTokenClientTest extends MockServerTestBase {
                         .withPath("/oauth2/token"),
                 exactly(1)
         )
-                .callback(HttpCallback.callback().withCallbackClass(BadRequestCallback.class.getName()));
+                .respond(HttpClassCallback.callback().withCallbackClass(BadRequestCallback.class.getName()));
 
         ClientCredentialsGrantTokenClient tokenClient = new ClientCredentialsGrantTokenClient(tokenEndpointUri, new ClientSecretCredentials("clientid", "password"));
         tokenClient.getToken("badRequest");
@@ -90,7 +89,7 @@ public class ClientSecretTokenClientTest extends MockServerTestBase {
                         .withPath("/oauth2/token"),
                 exactly(1)
         )
-                .callback(HttpCallback.callback().withCallbackClass(SuccessfulExpectationCallback.class.getName()));
+                .respond(HttpClassCallback.callback().withCallbackClass(SuccessfulExpectationCallback.class.getName()));
 
         ClientCredentialsGrantTokenClient tokenClient = new ClientCredentialsGrantTokenClient(tokenEndpointUri, new ClientSecretCredentials("clientid", "password"));
         tokenClient.getToken();
