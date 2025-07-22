@@ -71,6 +71,7 @@ jobs:
           path: target/surefire-reports/*.xml
           reporter: java-junit
           fail-on-error: false
+          only-summary: true
 
       - name: Publish to GitHub Packages
         if: github.event_name == 'push'
