@@ -50,13 +50,12 @@ public class InMemoryTokenCache implements TokenCache {
         // Token is missing or expired - fetch a new one
         ExpiringToken token = underlyingSource.get();
         if (token.getExpiresInSeconds() <= 0) {
-            throw new IllegalArgumentException("Authorization server does not provide token expiration information. Consider using NoCache or custom cache implementation to avoid performance penalty caused by locking.");
+            throw new IllegalArgumentException("Authorization server does not provide token expiration information. Consider using NoCache or custom cache implementation.");
         }
-        
-        // Use compute for thread-safe update, but we already have the token
+
+        // Use compute for thread-safe update, even though we already have the token
         CachedToken newToken = new CachedToken(token.getToken(), token.getExpiresInSeconds());
         cache.compute(cacheKey, (key, existingToken) -> {
-            // Double-check: another thread might have updated it with a fresh token
             if (existingToken != null && !existingToken.isExpired()) {
                 return existingToken;
             }
