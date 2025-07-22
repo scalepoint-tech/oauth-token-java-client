@@ -23,7 +23,7 @@ public class ResourceScopedAccessGrantTokenClient extends CustomGrantTokenClient
      * @throws IOException Exception during token endpoint communication
      */
     @SuppressWarnings("UnusedReturnValue")
-    public String getToken(ResourceScopedAccessGrantParameters parameters) throws IOException {
+    public String getToken(ResourceScopedAccessGrantParameters parameters) throws IOException, InterruptedException {
         return getTokenInternal(getPostParams(parameters), parameters.getScope());
     }
 

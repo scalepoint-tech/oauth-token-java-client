@@ -3,68 +3,50 @@ package com.scalepoint.oauth_token_client;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.io.IOException;
+import java.net.URI;
 import java.net.URLEncoder;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.List;
+import java.util.stream.Collectors;
 
 class TokenEndpointHttpClient {
-    private final static String UTF8 = "utf-8";
     private final static ObjectMapper MAPPER = new ObjectMapper();
 
     private final String tokenEndpointUri;
+    private final HttpClient httpClient;
 
     public TokenEndpointHttpClient(String tokenEndpointUri) {
         this.tokenEndpointUri = tokenEndpointUri;
+        this.httpClient = HttpClient.newBuilder()
+                .connectTimeout(Duration.ofSeconds(30))
+                .build();
     }
 
-    ExpiringToken getToken(List<NameValuePair> params) throws IOException {
-
-        String body = formatRequest(params);
-        HttpURLConnection c = makeRequest(body);
-        String tokenResponse = readResponse(c);
-        return parseResponse(tokenResponse);
-    }
-
-    private String formatRequest(List<NameValuePair> params) throws UnsupportedEncodingException {
-        String body = "";
-        for (NameValuePair p: params) {
-            body += URLEncoder.encode(p.getName(), UTF8) + "=" + URLEncoder.encode(p.getValue(), UTF8) + "&";
+    ExpiringToken getToken(List<NameValuePair> params) throws IOException, InterruptedException {
+        String formData = params.stream()
+                .map(p -> URLEncoder.encode(p.getName(), StandardCharsets.UTF_8) + "=" + 
+                         URLEncoder.encode(p.getValue(), StandardCharsets.UTF_8))
+                .collect(Collectors.joining("&"));
+        
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(tokenEndpointUri))
+                .timeout(Duration.ofSeconds(30))
+                .header("Content-Type", "application/x-www-form-urlencoded")
+                .POST(HttpRequest.BodyPublishers.ofString(formData, StandardCharsets.UTF_8))
+                .build();
+        
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        
+        if (response.statusCode() != 200) {
+            throw new IOException("HTTP Status Code: " + response.statusCode() + ", " + response.body());
         }
-        body = body.substring(0, body.length()-1);
-        return body;
-    }
-
-    private HttpURLConnection makeRequest(String body) throws IOException {
-        URL u = new URL(tokenEndpointUri);
-        HttpURLConnection c = (HttpURLConnection)u.openConnection();
-        c.setRequestMethod("POST");
-        c.setInstanceFollowRedirects(false);
-        c.setDoInput(true);
-        c.setDoOutput(true);
-        c.setReadTimeout(30 * 1000);
-        c.setConnectTimeout(30 * 1000);
-        c.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-        c.setUseCaches(false);
-        OutputStream outputStream = c.getOutputStream();
-        OutputStreamWriter writer = new OutputStreamWriter(outputStream);
-        writer.write(body);
-        writer.flush();
-        writer.close();
-        return c;
-    }
-
-    private String readResponse(HttpURLConnection c) throws IOException {
-        int statusCode = c.getResponseCode();
-        if (statusCode != 200) {
-            InputStream errorStream = c.getErrorStream();
-            String errorMessage = errorStream != null
-                    ? ", " + readStream(errorStream)
-                    : "";
-            throw new IOException("HTTP Status Code: "+statusCode+errorMessage);
-        }
-        return readStream(c.getInputStream());
+        
+        return parseResponse(response.body());
     }
 
     private ExpiringToken parseResponse(String tokenResponse) throws IOException {
@@ -79,16 +61,5 @@ class TokenEndpointHttpClient {
         }
 
         return new ExpiringToken(accessToken, expiresInSeconds);
-    }
-
-    private String readStream(InputStream stream) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-        String content = "";
-        String line;
-        while ((line = reader.readLine()) != null) {
-            content += line;
-        }
-        reader.close();
-        return content;
     }
 }

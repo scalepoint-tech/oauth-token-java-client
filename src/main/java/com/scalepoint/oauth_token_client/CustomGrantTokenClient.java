@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings("WeakerAccess")
 public abstract class CustomGrantTokenClient {
     private final ClientCredentials clientCredentials;
     private final TokenEndpointHttpClient tokenEndpointHttpClient;
@@ -26,7 +25,7 @@ public abstract class CustomGrantTokenClient {
      * @return Access token
      * @throws IOException Exception during token endpoint communication
      */
-    protected String getTokenInternal(final List<NameValuePair> parameters, final String... scopes) throws IOException {
+    protected String getTokenInternal(final List<NameValuePair> parameters, final String... scopes) throws IOException, InterruptedException {
 
         final String scopeString =
                 (scopes == null || scopes.length < 1)
@@ -37,7 +36,7 @@ public abstract class CustomGrantTokenClient {
 
         return cache.get(cacheKey, new TokenSource() {
             @Override
-            public ExpiringToken get() throws IOException {
+            public ExpiringToken get() throws IOException, InterruptedException {
 
                 List<NameValuePair> form = new ArrayList<NameValuePair>();
 

@@ -10,5 +10,5 @@ public interface TokenSource {
      * @return Token
      * @throws IOException
      */
-    ExpiringToken get() throws IOException;
+    ExpiringToken get() throws IOException, InterruptedException;
 }
