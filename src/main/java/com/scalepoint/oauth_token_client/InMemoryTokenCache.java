@@ -1,27 +1,35 @@
 package com.scalepoint.oauth_token_client;
 
-import net.jodah.expiringmap.ExpirationPolicy;
-import net.jodah.expiringmap.ExpiringMap;
-
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.ReentrantLock;
+import java.time.Instant;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
- * Simple in-memory token cache implementation
+ * Simple in-memory token cache implementation using ConcurrentHashMap
  */
 public class InMemoryTokenCache implements TokenCache {
-    private final ExpiringMap<String, String> cacheMap;
-    private final ReentrantLock lock = new ReentrantLock();
+    private final ConcurrentMap<String, CachedToken> cache = new ConcurrentHashMap<>();
 
     /**
-     * Create new in-memory cache instance
+     * Wrapper class to store token with its expiration time
      */
-    @SuppressWarnings("WeakerAccess")
-    public InMemoryTokenCache() {
-        this.cacheMap = ExpiringMap.builder()
-                .variableExpiration()
-                .build();
+    private static class CachedToken {
+        private final String token;
+        private final Instant expirationTime;
+
+        CachedToken(String token, long expiresInSeconds) {
+            this.token = token;
+            this.expirationTime = Instant.now().plusSeconds(expiresInSeconds);
+        }
+
+        String getToken() {
+            return token;
+        }
+
+        boolean isExpired() {
+            return Instant.now().isAfter(expirationTime);
+        }
     }
 
     /**
@@ -32,24 +40,29 @@ public class InMemoryTokenCache implements TokenCache {
      */
     @Override
     public String get(String cacheKey, TokenSource underlyingSource) throws IOException {
-        String value = cacheMap.get(cacheKey);
-        if (value == null) {
-            lock.lock();
-            try {
-                value = cacheMap.get(cacheKey);
-                if (value == null) {
-                    ExpiringToken token = underlyingSource.get();
-                    value = token.getToken();
-                    if (token.getExpiresInSeconds() > 0) {
-                        cacheMap.put(cacheKey, value, ExpirationPolicy.CREATED, token.getExpiresInSeconds(), TimeUnit.SECONDS);
-                    } else {
-                        throw new IOException("Authorization server does not provide token expiration information. Consider using NoCache or custom cache implementation to avoid performance penalty caused by locking.");
-                    }
-                }
-            } finally {
-                lock.unlock();
-            }
+        CachedToken cachedToken = cache.get(cacheKey);
+        
+        // Check if we have a valid (non-expired) token
+        if (cachedToken != null && !cachedToken.isExpired()) {
+            return cachedToken.getToken();
         }
-        return value;
+        
+        // Token is missing or expired - fetch a new one
+        ExpiringToken token = underlyingSource.get();
+        if (token.getExpiresInSeconds() <= 0) {
+            throw new IllegalArgumentException("Authorization server does not provide token expiration information. Consider using NoCache or custom cache implementation to avoid performance penalty caused by locking.");
+        }
+        
+        // Use compute for thread-safe update, but we already have the token
+        CachedToken newToken = new CachedToken(token.getToken(), token.getExpiresInSeconds());
+        cache.compute(cacheKey, (key, existingToken) -> {
+            // Double-check: another thread might have updated it with a fresh token
+            if (existingToken != null && !existingToken.isExpired()) {
+                return existingToken;
+            }
+            return newToken;
+        });
+        
+        return newToken.getToken();
     }
 }
