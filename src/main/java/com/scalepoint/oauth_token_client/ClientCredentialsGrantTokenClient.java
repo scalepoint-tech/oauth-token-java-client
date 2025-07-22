@@ -40,7 +40,7 @@ public class ClientCredentialsGrantTokenClient extends CustomGrantTokenClient {
      * @throws IOException Exception during token endpoint communication
      */
     @SuppressWarnings("UnusedReturnValue")
-    public String getToken(final String... scopes) throws IOException {
+    public String getToken(final String... scopes) throws IOException, InterruptedException {
         return getTokenInternal(Collections.<NameValuePair>emptyList(), scopes);
     }
 

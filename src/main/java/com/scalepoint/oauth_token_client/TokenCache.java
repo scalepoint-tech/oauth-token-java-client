@@ -12,5 +12,5 @@ public interface TokenCache {
      * @return Token from either cache or underlying source
      * @throws IOException Exception from underlying cache
      */
-    String get(String cacheKey, TokenSource underlyingSource) throws IOException;
+    String get(String cacheKey, TokenSource underlyingSource) throws IOException, InterruptedException;
 }

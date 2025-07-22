@@ -39,7 +39,7 @@ public class InMemoryTokenCache implements TokenCache {
      * @throws IOException Exception from underlying source
      */
     @Override
-    public String get(String cacheKey, TokenSource underlyingSource) throws IOException {
+    public String get(String cacheKey, TokenSource underlyingSource) throws IOException, InterruptedException {
         CachedToken cachedToken = cache.get(cacheKey);
         
         // Check if we have a valid (non-expired) token
