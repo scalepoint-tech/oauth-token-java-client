@@ -1,17 +1,16 @@
 package com.scalepoint.oauth_token_client;
 
-import io.jsonwebtoken.JwsHeader;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 
-import java.security.Key;
+import java.security.PrivateKey;
+import java.time.Instant;
 import java.util.Date;
 import java.util.UUID;
 
 class ClientAssertionJwtFactory {
     private final String tokenEndpointUri;
     private final String clientId;
-    private final Key key;
+    private final PrivateKey key;
     private final String thumbprint;
 
     public ClientAssertionJwtFactory(String tokenEndpointUri, String clientId, CertificateWithPrivateKey keyPair) {
@@ -21,23 +20,27 @@ class ClientAssertionJwtFactory {
         this.key = keyPair.getPrivateKey();
     }
 
-    public String CreateAssertionToken() {
-        Date now = new Date();
+    public String createAssertionToken() {
+        Instant now = Instant.now();
         // no need to have a long-lived token (clock skew should be accounted for on the server-side)
-        Date expires = new Date(now.getTime() + 10000 /* 10 seconds */);
+        Instant expires = now.plusSeconds(10);
 
         return Jwts.builder()
-                .setHeaderParam("typ", "JWT")
-                .setHeaderParam(JwsHeader.X509_CERT_SHA1_THUMBPRINT, thumbprint)
-                .setHeaderParam(JwsHeader.KEY_ID, thumbprint)
-                .setIssuer(clientId)
-                .setSubject(clientId)
-                .setAudience(tokenEndpointUri)
-                .setId(UUID.randomUUID().toString())
-                .setIssuedAt(now)
-                .setNotBefore(now)
-                .setExpiration(expires)
-                .signWith(SignatureAlgorithm.RS256, key)
+                .header()
+                    .type("JWT")
+                    .add("x5t", thumbprint)
+                    .keyId(thumbprint)
+                    .and()
+                .claims()
+                    .issuer(clientId)
+                    .subject(clientId)
+                    .audience().add(tokenEndpointUri).and()
+                    .id(UUID.randomUUID().toString())
+                    .issuedAt(Date.from(now))
+                    .notBefore(Date.from(now))
+                    .expiration(Date.from(expires))
+                    .and()
+                .signWith(key, Jwts.SIG.RS256)
                 .compact();
     }
 

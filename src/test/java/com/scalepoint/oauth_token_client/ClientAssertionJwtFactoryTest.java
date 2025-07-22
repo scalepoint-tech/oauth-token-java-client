@@ -22,7 +22,7 @@ public class ClientAssertionJwtFactoryTest {
         CertificateWithPrivateKey keyPair = TestCertificateHelper.load();
         thumbprint = CertificateUtil.getThumbprint(keyPair.getCertificate());
         ClientAssertionJwtFactory factory = new ClientAssertionJwtFactory(TOKEN_ENDPOINT_URI, CLIENT_ID, keyPair);
-        String tokenString = factory.CreateAssertionToken();
+        String tokenString = factory.createAssertionToken();
         // Use the PUBLIC key from the certificate to verify the JWT signature, not the private key
         token = Jwts.parser().verifyWith(keyPair.getCertificate().getPublicKey()).build().parseSignedClaims(tokenString);
     }
