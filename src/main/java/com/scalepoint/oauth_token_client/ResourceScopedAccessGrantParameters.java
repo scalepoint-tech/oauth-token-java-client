@@ -6,30 +6,30 @@ package com.scalepoint.oauth_token_client;
 @SuppressWarnings("WeakerAccess")
 public class ResourceScopedAccessGrantParameters {
     private final String scope;
-    private final String resource;
+    private final String target;
     private String tenantId;
     private String[] amr;
 
     /**
      * Creates new ResourceScopedAccessGrantParameters
      * @param scope OAuth2 scope
-     * @param resource Specific resource identifier
+     * @param target Specific resource identifier
      */
-    public ResourceScopedAccessGrantParameters(String scope, String resource) {
+    public ResourceScopedAccessGrantParameters(String scope, String target) {
         this.scope = scope;
-        this.resource = resource;
+        this.target = target;
     }
 
     /**
      * Creates new ResourceScopedAccessGrantParameters
      * @param scope OAuth2 scope
-     * @param resource Specific resource identifier
+     * @param target Specific resource identifier
      * @param tenantId Resource tenant identifier
      * @param amr Original authentication method references
      */
     @SuppressWarnings("SameParameterValue")
-    public ResourceScopedAccessGrantParameters(String scope, String resource, String tenantId, String[] amr) {
-        this(scope, resource);
+    public ResourceScopedAccessGrantParameters(String scope, String target, String tenantId, String[] amr) {
+        this(scope, target);
         this.tenantId = tenantId;
         this.amr = amr;
     }
@@ -48,8 +48,8 @@ public class ResourceScopedAccessGrantParameters {
      *
      * @return Specific resource identifier
      */
-    public String getResource() {
-        return resource;
+    public String getTarget() {
+        return target;
     }
 
     /**
