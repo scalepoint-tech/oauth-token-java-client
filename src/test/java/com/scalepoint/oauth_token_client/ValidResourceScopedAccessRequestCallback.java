@@ -15,7 +15,7 @@ public class ValidResourceScopedAccessRequestCallback extends ValidRequestExpect
         CertificateWithPrivateKey keyPair = TestCertificateHelper.load();
         Jwts.parser().verifyWith(keyPair.getCertificate().getPublicKey()).build().parseSignedClaims(params.get("client_assertion"));
 
-        if (!params.get("resource").equals("resource")) return false;
+        if (!params.get("target").equals("resource")) return false;
         if (!params.get("amr").equals("pwd otp mfa")) return false;
         if (!params.get("tenantId").equals("tenantId")) return false;
 

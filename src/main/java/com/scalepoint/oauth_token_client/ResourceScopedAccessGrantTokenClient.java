@@ -36,7 +36,7 @@ public class ResourceScopedAccessGrantTokenClient extends CustomGrantTokenClient
 
     private List<NameValuePair> getPostParams(ResourceScopedAccessGrantParameters parameters) {
         ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
-        params.add(new NameValuePair("resource", parameters.getResource()));
+        params.add(new NameValuePair("target", parameters.getTarget()));
         String tenantId = parameters.getTenantId();
         if (tenantId != null) {
             params.add(new NameValuePair("tenantId", tenantId));
