@@ -12,6 +12,13 @@ public class InMemoryTokenCache implements TokenCache {
     private final ConcurrentMap<String, CachedToken> cache = new ConcurrentHashMap<>();
 
     /**
+     * Constructs a new in-memory token cache.
+     */
+    public InMemoryTokenCache() {
+        // Default constructor
+    }
+
+    /**
      * Wrapper class to store token with its expiration time
      */
     private static class CachedToken {

@@ -19,6 +19,8 @@ public class ExpiringToken {
     }
 
     /**
+     * Gets the access token string.
+     *
      * @return Token
      */
     public String getToken() {
@@ -26,6 +28,8 @@ public class ExpiringToken {
     }
 
     /**
+     * Gets the token expiration time in seconds.
+     *
      * @return Expiration in seconds
      */
     public int getExpiresInSeconds() {
