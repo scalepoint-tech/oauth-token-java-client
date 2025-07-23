@@ -129,4 +129,4 @@ jobs:
         run: mvn --batch-mode deploy -DskipTests
         env:
           CENTRAL_USERNAME: ${{ secrets.CENTRAL_USERNAME }}
-          CENTRAL_PASSWORD: ${{ secrets.CENTRAL_PASSWORD }}
+          CENTRAL_TOKEN: ${{ secrets.CENTRAL_TOKEN }}
