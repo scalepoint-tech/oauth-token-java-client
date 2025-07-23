@@ -7,6 +7,14 @@ import java.io.IOException;
  */
 @SuppressWarnings("unused")
 public class NoCache implements TokenCache {
+    
+    /**
+     * Constructs a new no-cache implementation.
+     */
+    public NoCache() {
+        // Default constructor
+    }
+
     /**
      * @param cacheKey         Cache key
      * @param underlyingSource Underlying token source to invoke

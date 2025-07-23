@@ -4,12 +4,23 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Abstract base class for OAuth2 custom grant token clients.
+ * Provides common functionality for obtaining access tokens using custom grant types.
+ */
 public abstract class CustomGrantTokenClient {
     private final ClientCredentials clientCredentials;
     private final TokenEndpointHttpClient tokenEndpointHttpClient;
     private final String partialCacheKey;
     private final TokenCache cache;
 
+    /**
+     * Constructs a custom grant token client.
+     *
+     * @param tokenEndpointUri URI of the OAuth2 token endpoint
+     * @param clientCredentials client credentials for authentication
+     * @param cache token cache for storing and retrieving tokens
+     */
     public CustomGrantTokenClient(String tokenEndpointUri, ClientCredentials clientCredentials, TokenCache cache) {
         this.tokenEndpointHttpClient = new TokenEndpointHttpClient(tokenEndpointUri);
         this.clientCredentials = clientCredentials;
@@ -24,6 +35,7 @@ public abstract class CustomGrantTokenClient {
      * @param scopes     OAuth2 scopes to request
      * @return Access token
      * @throws IOException Exception during token endpoint communication
+     * @throws InterruptedException if the thread is interrupted during token retrieval
      */
     protected String getTokenInternal(final List<NameValuePair> parameters, final String... scopes) throws IOException, InterruptedException {
 
@@ -55,6 +67,8 @@ public abstract class CustomGrantTokenClient {
     }
 
     /**
+     * Gets the OAuth2 grant type for this client.
+     *
      * @return Grant type (i.e. "client_credentials")
      */
     protected abstract String getGrantType();

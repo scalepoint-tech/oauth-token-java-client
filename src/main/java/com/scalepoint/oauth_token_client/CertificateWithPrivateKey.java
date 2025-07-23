@@ -28,6 +28,8 @@ public class CertificateWithPrivateKey {
     }
 
     /**
+     * Gets the X.509 certificate.
+     *
      * @return Certificate
      */
     public X509Certificate getCertificate() {
@@ -35,6 +37,8 @@ public class CertificateWithPrivateKey {
     }
 
     /**
+     * Gets the private key associated with the certificate.
+     *
      * @return Private key
      */
     public PrivateKey getPrivateKey() {

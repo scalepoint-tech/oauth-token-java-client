@@ -9,6 +9,8 @@ public class NameValuePair {
     final String value;
 
     /**
+     * Constructs a name-value pair.
+     *
      * @param name Name
      * @param value Value
      */

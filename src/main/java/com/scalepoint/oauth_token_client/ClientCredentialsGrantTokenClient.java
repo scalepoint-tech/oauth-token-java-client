@@ -38,6 +38,7 @@ public class ClientCredentialsGrantTokenClient extends CustomGrantTokenClient {
      * @param scopes OAuth2 scopes to request
      * @return Access token
      * @throws IOException Exception during token endpoint communication
+     * @throws InterruptedException if the thread is interrupted during token retrieval
      */
     @SuppressWarnings("UnusedReturnValue")
     public String getToken(final String... scopes) throws IOException, InterruptedException {
