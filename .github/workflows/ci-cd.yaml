@@ -11,6 +11,7 @@ on:
 permissions:
   contents: write
   packages: write
+  checks: write
 
 jobs:
   build-and-publish:
@@ -72,7 +73,6 @@ jobs:
           path: target/surefire-reports/junitreports/*.xml
           reporter: java-junit
           fail-on-error: false
-          only-summary: true
 
       - name: Publish to GitHub Packages
         if: github.event_name == 'push'
